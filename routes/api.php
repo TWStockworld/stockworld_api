@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\StockController;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 /*
@@ -18,6 +20,12 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('auth')->group(function () {
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);
+});
+
+Route::prefix('stock')->group(function () {
+    Route::get('update_stock_category',[StockController::class,'update_stock_category']);
+    Route::get('update_stock_name',[StockController::class,'update_stock_name']);
+
 });
 
 Route::middleware('auth:api')->group(function () {

@@ -14,4 +14,10 @@ class StockCategory extends Model
     {
         return $this->hasMany(StockName::class);
     }
+    public static function get_stock_category_id($name)
+    {
+        $result = StockCategory::where('category',$name)->first()->id;
+    
+        return $result;
+    }
 }
