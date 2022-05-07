@@ -22,7 +22,14 @@ class StockController extends Controller
     {
         return $this->StockRepository->update_stock_name();
     }
-
+    public function update_stock_data()
+    {
+        return $this->StockRepository->update_stock_data();
+    }
+    public function cal_stock()
+    {
+        return $this->StockRepository->cal_stock();
+    }
     /**
      * Display a listing of the resource.
      *

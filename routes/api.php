@@ -25,6 +25,8 @@ Route::prefix('auth')->group(function () {
 Route::prefix('stock')->group(function () {
     Route::get('update_stock_category',[StockController::class,'update_stock_category']);
     Route::get('update_stock_name',[StockController::class,'update_stock_name']);
+    Route::get('update_stock_data',[StockController::class,'update_stock_data']);
+    Route::get('cal_stock',[StockController::class,'cal_stock']);
 
 });
 
