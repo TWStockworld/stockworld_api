@@ -26,7 +26,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('stock_names', function (Blueprint $table) {
-            //
+            $table->date('date')->comment('股票名稱更新時間');
         });
     }
 };
