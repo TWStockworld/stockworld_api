@@ -17,21 +17,26 @@ use Illuminate\Support\Facades\Route;
 */
 //php artisan route:list 查看可用
 //php artisan l5-swagger:generate
+
+
 Route::prefix('auth')->group(function () {
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);
 });
 
 Route::prefix('stock')->group(function () {
-    Route::get('update_stock_category',[StockController::class,'update_stock_category']);
-    Route::get('update_stock_name',[StockController::class,'update_stock_name']);
-    Route::get('update_stock_data',[StockController::class,'update_stock_data']);
-    Route::get('cal_stock',[StockController::class,'cal_stock']);
 
+    Route::get('update_stock_category', [StockController::class, 'update_stock_category']);
+    Route::get('update_stock_name', [StockController::class, 'update_stock_name']);
+    Route::get('update_stock_data', [StockController::class, 'update_stock_data']);
+
+    Route::get('get_stock_category', [StockController::class, 'get_stock_category']);
+    Route::get('get_stock_name', [StockController::class, 'get_stock_name']);
+
+    Route::post('cal_stock', [StockController::class, 'cal_stock']);
 });
 
 Route::middleware('auth:api')->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::get('user', [AuthController::class, 'userInfo']);
 });
-

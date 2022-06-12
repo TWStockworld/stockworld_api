@@ -2,33 +2,45 @@
 
 namespace App\Http\Controllers;
 
-use App\Repositories\StockRepository;
+use App\Repositories\UpdateStockRepository;
+use App\Repositories\GetStockRepository;
 use Illuminate\Http\Request;
 
 class StockController extends Controller
 {
-    protected $StockRepository;
+    protected $UpdateStockRepository;
+    protected $GetStockRepository;
 
-    public function __construct(StockRepository $StockRepository)
+    public function __construct(UpdateStockRepository $UpdateStockRepository, GetStockRepository $GetStockRepository)
     {
-        $this->StockRepository = $StockRepository;
+        $this->UpdateStockRepository = $UpdateStockRepository;
+        $this->GetStockRepository = $GetStockRepository;
     }
-
     public function update_stock_category()
     {
-        return $this->StockRepository->update_stock_category();
+        return $this->UpdateStockRepository->update_stock_category();
     }
+
     public function update_stock_name()
     {
-        return $this->StockRepository->update_stock_name();
+        return $this->UpdateStockRepository->update_stock_name();
     }
     public function update_stock_data()
     {
-        return $this->StockRepository->update_stock_data();
+        return $this->UpdateStockRepository->update_stock_data();
     }
-    public function cal_stock()
+
+    public function get_stock_category()
     {
-        return $this->StockRepository->cal_stock();
+        return $this->GetStockRepository->get_stock_category();
+    }
+    public function get_stock_name()
+    {
+        return $this->GetStockRepository->get_stock_name();
+    }
+    public function cal_stock(Request $request)
+    {
+        return $this->GetStockRepository->cal_stock($request);
     }
     /**
      * Display a listing of the resource.

@@ -25,4 +25,10 @@ class StockName extends Model
     
         return $result;
     }
+    public static function get_stock_name($stock_id)
+    {
+        $result = StockName::where('stock_id',$stock_id)->first()->stock_name;
+    
+        return $result;
+    }
 }
