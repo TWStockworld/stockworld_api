@@ -15,7 +15,6 @@ return new class extends Migration
     {
         Schema::create('stock_names', function (Blueprint $table) {
             $table->id();
-            $table->date('date')->comment('股票名稱更新時間');
             $table->unsignedBigInteger('stock_category_id');
             $table->foreign('stock_category_id')->references('id')->on('stock_categories')->onDelete('cascade')->comment('股票類別ID');
             $table->string('stock_id')->comment('股票ID');
