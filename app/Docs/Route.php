@@ -11,6 +11,15 @@ namespace App\Docs;
  *      description="註冊",
  *      @OA\Parameter(
  *          name="name",
+ *          description="姓名",
+ *          required=true,
+ *          in="query",
+ *          @OA\Schema(
+ *              type="string"
+ *          )
+ *      ),
+ *      @OA\Parameter(
+ *          name="account",
  *          description="帳號",
  *          required=true,
  *          in="query",
@@ -20,7 +29,7 @@ namespace App\Docs;
  *      ),
  *      @OA\Parameter(
  *          name="password",
- *          description="密碼, 最少8位",
+ *          description="密碼",
  *          required=true,
  *          in="query",
  *          @OA\Schema(
@@ -41,8 +50,12 @@ namespace App\Docs;
  *          description="請求成功"
  *       ),
  *      @OA\Response(
- *          response=422,
- *          description="驗證參數錯誤"
+ *          response=401,
+ *          description="填寫錯誤"
+ *       ),
+ *      @OA\Response(
+ *          response=402,
+ *          description="資料庫錯誤"
  *       )
  * )
  * 註冊
@@ -55,7 +68,7 @@ namespace App\Docs;
  *      summary="登入",
  *      description="登入",
  *      @OA\Parameter(
- *          name="name",
+ *          name="account",
  *          description="帳號",
  *          required=true,
  *          in="query",
@@ -76,6 +89,10 @@ namespace App\Docs;
  *          response=200,
  *          description="請求成功"
  *       )
+ *      ,@OA\Response(
+ *          response=401,
+ *          description="登入失敗"
+ *       ),
  * )
  * 登入
 
