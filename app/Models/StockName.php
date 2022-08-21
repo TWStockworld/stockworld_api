@@ -19,7 +19,7 @@ class StockName extends Model
     {
         return $this->hasMany(StockData::class);
     }
-    public static function get_virtual_stock_id($name)
+    public static function get_stock_name_id($name)
     {
         $result = StockName::where('stock_id',$name)->first()->id;
     
