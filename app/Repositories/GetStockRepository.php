@@ -16,12 +16,13 @@ class GetStockRepository
 {
     protected $user;
 
-    public function __construct(User $user, StockName $stockName, StockCategory $stockCategory)
-    {
-        $this->user = $user;
-        $this->stockName = $stockName;
-        $this->stockCategory = $stockCategory;
-    }
+    // public function __construct(User $user, StockName $stockName, StockCategory $stockCategory,StockData $stockData)
+    // {
+    //     $this->user = $user;
+    //     $this->stockName = $stockName;
+    //     $this->stockCategory = $stockCategory;
+    //     $this->stockData = $stockData;
+    // }
 
 
     public function get_stock_category()
@@ -30,10 +31,22 @@ class GetStockRepository
     }
     public function get_stock_name()
     {
-        $stocks = StockName::where(['stock_category_id' => 30])->get();
-        return response()->json(['success' => $stocks], 200);
+        $stocks = StockCategory::where('category', "電子零組件業")->first()->StockName;
+    
+        // $stocks = StockName::where(['stock_category_id' => 14])->take(80)->get();
+        return response()->json(['count' => $stocks->count(), 'time' => date("Y-m-d H:i:s"),'success' => $stocks,], 200);
+    }
+    public function get_stock_count()
+    {
+        $stocks = StockData::select('stock_name_id')->distinct()->get();
+        return response()->json(['count' => $stocks->count(), 'success' => $stocks], 200);
     }
 
+    public function get_stock()
+    {
+        $stocks = StockData::where('stock_name_id',1654)->get();
+        return response()->json(['count' => $stocks->count(), 'success' => $stocks], 200);
+    }
 
     public function cal_stock($data)
     {
@@ -52,7 +65,7 @@ class GetStockRepository
 
                     if ($stockA_id != $stockB_id) {
                         list($up, $down, $stockA_datas, $stockB_datas) = self::cal_two_stock($startdate, $enddate, $diff, $stockA_id, $stockB_id);
-                        $result = ['up'=>$up, 'down'=>$down, 'stockA_datas'=>$stockA_datas, 'stockB_datas'=>$stockB_datas];
+                        $result = ['up' => $up, 'down' => $down, 'stockA_datas' => $stockA_datas, 'stockB_datas' => $stockB_datas];
                         array_push($stock_list, $result);
                         // break;
                     }

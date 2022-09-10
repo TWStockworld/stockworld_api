@@ -33,6 +33,8 @@ Route::prefix('stock')->group(function () {
 
     Route::get('get_stock_category', [StockController::class, 'get_stock_category']);
     Route::get('get_stock_name', [StockController::class, 'get_stock_name']);
+    Route::get('get_stock_count', [StockController::class, 'get_stock_count']);
+    Route::get('get_stock', [StockController::class, 'get_stock']);
 
     Route::post('cal_stock', [StockController::class, 'cal_stock']);
 });
@@ -52,4 +54,8 @@ https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap03_O
 
 上市公司基本資料
 https://openapi.twse.com.tw/v1/opendata/t187ap03_L
+
+https://www.twse.com.tw/exchangeReport/STOCK_DAY?response=json&date=2022/09/08&stockNo=0050
+
+https://www.tpex.org.tw/web/stock/aftertrading/daily_trading_info/st43_result.php?l=zh-tw&d=111/09&stkno=3297
 */
