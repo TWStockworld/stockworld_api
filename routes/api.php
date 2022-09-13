@@ -29,12 +29,17 @@ Route::prefix('stock')->group(function () {
 
     Route::get('test', [StockController::class, 'test']);
     Route::get('update_stock_information', [StockController::class, 'update_stock_information']);
-    Route::get('update_stock_data', [StockController::class, 'update_stock_data']);
+    Route::get('update_stock_data_findmind', [StockController::class, 'update_stock_data_findmind']);
+    Route::post('update_stock_data', [StockController::class, 'update_stock_data']);
 
     Route::get('get_stock_category', [StockController::class, 'get_stock_category']);
     Route::get('get_stock_name', [StockController::class, 'get_stock_name']);
     Route::get('get_stock_count', [StockController::class, 'get_stock_count']);
     Route::get('get_stock', [StockController::class, 'get_stock']);
+
+    Route::get('test1', [StockController::class, 'test1']);
+    Route::get('test2', [StockController::class, 'test2']);
+
 
     Route::post('cal_stock', [StockController::class, 'cal_stock']);
 });
@@ -57,5 +62,10 @@ https://openapi.twse.com.tw/v1/opendata/t187ap03_L
 
 https://www.twse.com.tw/exchangeReport/STOCK_DAY?response=json&date=2022/09/08&stockNo=0050
 
+https://www.twse.com.tw/exchangeReport/MI_INDEX?response=json&date=20220908&type=ALL
+
+
 https://www.tpex.org.tw/web/stock/aftertrading/daily_trading_info/st43_result.php?l=zh-tw&d=111/09&stkno=3297
+
+http://www.tpex.org.tw/web/stock/aftertrading/daily_close_quotes/stk_quote_result.php?d=111/09/08
 */

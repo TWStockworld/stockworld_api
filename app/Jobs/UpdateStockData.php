@@ -11,7 +11,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Client\Pool;
 
-use App\Models\StockCategory;
+use App\Models\StockUpdateRecord;
 use App\Models\StockData;
 use App\Models\StockName;
 
@@ -19,55 +19,125 @@ class UpdateStockData implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     public $tries = 2;
+    protected $input; // you forgot of put this line
 
-    public function __construct()
+    public function __construct($input)
     {
+        $this->input = $input;
         //
     }
     public function handle()
     {
-        $stocks_chunked = StockName::all();
-        $stocks_chunked=$stocks_chunked->chunk(7);
-        // $stocks_chunked = StockCategory::where('category', "電子零組件業")->first()->StockName->chunk(7);
-        $start = '2010-01-01';
-        $end = '2022-09-09';
-        foreach ($stocks_chunked as $stocks_chunk) {
-            $stock_request = fn (Pool $pool) => $stocks_chunk->map(
-                fn (object $stock) => $pool->get(
-                    'https://api.finmindtrade.com/api/v4/data',
-                    ['dataset' => 'TaiwanStockPrice', 'data_id' => $stock->stock_id, 'start_date' => $start, 'end_date' => $end, 'token' => 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJkYXRlIjoiMjAyMi0wNS0wNSAxNzo0NzoxNiIsInVzZXJfaWQiOiJsb2dpdGVjaDA4NTciLCJpcCI6IjEwNi4xMDUuMTE2LjEwOCJ9.HmPjJB9uyUfDnekJeGcvvATmVIMf_jDhhcj4IZgJqlU']
-                )
-            );
+        $insert_data = collect();
 
-            $responses = Http::pool($stock_request);
+        $republicdate = date_create($this->input);
+        $republicdate = $republicdate->modify("-1911 year");
+        $date0 = ltrim($republicdate->format("Y/m/d"), "0");
 
-            foreach ($responses as $response) {
-                $insert_data = collect();
+        $date = date_create($this->input);
+        $date1 = date_format($date, "Ymd"); //上市
 
-                $datas = $response->collect('data');
-                if ($datas->count() != 0) {
-                    $stock_name_id = StockName::get_stock_name_id($datas[0]['stock_id']);
-                    foreach ($datas as $data) {
-                        if (
-                            $data['close'] != 0.0
-                        ) {
-                            $day_change = round(($data['spread'] / ($data['close'] - $data['spread'])) * 100, 2);
-                            $stock_data = [
-                                'date' => $data['date'], 'stock_name_id' => $stock_name_id, 'open' => $data['open'],
-                                'up' => $data['max'], 'down' => $data['min'],
-                                'close' => $data['close'], 'day_change' => $day_change,
-                                'created_at' => date("Y-m-d H:i:s"), 'updated_at' => date("Y-m-d H:i:s")
-                            ];
-                            $insert_data->push($stock_data);
-                        }
+        $date = date_format($date, "Y-m-d"); //存資料庫
+        // $date0 = "111/09/12"; //上櫃
+        // $date1 = "20220912"; //上市
+        $responses = Http::pool(fn (Pool $pool) => [
+            //上櫃股票
+            $pool->get('http://www.tpex.org.tw/web/stock/aftertrading/daily_close_quotes/stk_quote_result.php?', [
+                'd' => $date0
+            ]),
+
+            //上市股票
+            $pool->get('https://www.twse.com.tw/exchangeReport/MI_INDEX', [
+                'type' => 'ALL', 'date' => $date1,
+            ]),
+        ]);
+
+        //上櫃股票
+        $newstocks = $responses[0]->collect('aaData');
+        if ($newstocks->count() != 0) {
+
+            $stocks = StockName::where('type', 2)->get();
+
+            $stocks = $stocks->map(function ($stock) use ($date, $newstocks, $insert_data) {
+
+                $newstock = $newstocks->filter(function ($newstock) use ($stock) {
+                    if ($newstock[0] == $stock->stock_id) {
+                        return $newstock;
+                    }
+                });
+                if ($newstock->count()) {
+                    $close = $newstock->values()->pluck(16)->get(0);
+                    if (
+                        $close != "--"
+                    ) {
+                        $stock_name_id = StockName::get_stock_name_id($stock->stock_id);
+
+                        $open = doubleval($newstock->values()->pluck(4)->get(0));
+                        $up = doubleval($newstock->values()->pluck(5)->get(0));
+                        $down = doubleval($newstock->values()->pluck(6)->get(0));
+                        $close = doubleval($newstock->values()->pluck(16)->get(0));
+                        $spread = doubleval($newstock->values()->pluck(3)->get(0));
+
+
+                        $day_change = round(($spread / ($close - $spread)) * 100, 2);
+                        $stock_data = [
+                            'date' => $date, 'stock_name_id' => $stock_name_id, 'open' => $open,
+                            'up' => $up, 'down' => $down,
+                            'close' => $close, 'day_change' => $day_change,
+                            'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')
+                        ];
+                        $insert_data->push($stock_data);
                     }
                 }
-                $allstock = $insert_data->toArray();
-                $chunks = array_chunk($allstock, 500);
-                foreach ($chunks as $chunk) {
-                    StockData::insert($chunk);
+            });
+        }
+
+        //上市股票
+        $newstocks = $responses[1]->collect('data9');
+        if ($newstocks->count() != 0) {
+
+            $stocks = StockName::where('type', 3)->get();
+
+            $stocks = $stocks->map(function ($stock) use ($date, $newstocks, $insert_data) {
+
+                $newstock = $newstocks->filter(function ($newstock) use ($stock) {
+                    if ($newstock[0] == $stock->stock_id) {
+                        return $newstock;
+                    }
+                });
+                if ($newstock->count()) {
+                    $close = $newstock->values()->pluck(8)->get(0);
+                    if (
+                        $close != "--"
+                    ) {
+                        $stock_name_id = StockName::get_stock_name_id($stock->stock_id);
+                        $open = doubleval($newstock->values()->pluck(5)->get(0));
+                        $up = doubleval($newstock->values()->pluck(6)->get(0));
+                        $down = doubleval($newstock->values()->pluck(7)->get(0));
+                        $close = doubleval($newstock->values()->pluck(8)->get(0));
+                        $sign = strip_tags(strval($newstock->values()->pluck(9)->get(0)));
+                        $value = $newstock->values()->pluck(10)->get(0);
+                        $spread = doubleval($sign . $value);
+
+                        $day_change = round(($spread / ($close - $spread)) * 100, 2);
+                        $stock_data = [
+                            'date' => $date, 'stock_name_id' => $stock_name_id, 'open' => $open,
+                            'up' => $up, 'down' => $down,
+                            'close' => $close, 'day_change' => $day_change,
+                            'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')
+                        ];
+                        $insert_data->push($stock_data);
+                    }
                 }
+            });
+        }
+        if ($insert_data->count()) {
+            $allstock = $insert_data->toArray();
+            $chunks = array_chunk($allstock, 500);
+            foreach ($chunks as $chunk) {
+                StockData::insert($chunk);
             }
+            StockUpdateRecord::create(['date' => $date, 'status_otc' => 1, 'status_sem' => 1]);
         }
     }
 }

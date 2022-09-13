@@ -34,7 +34,7 @@ class GetStockRepository
         $stocks = StockCategory::where('category', "電子零組件業")->first()->StockName;
     
         // $stocks = StockName::where(['stock_category_id' => 14])->take(80)->get();
-        return response()->json(['count' => $stocks->count(), 'time' => date("Y-m-d H:i:s"),'success' => $stocks,], 200);
+        return response()->json(['count' => $stocks->count(), 'time' => date('Y-m-d H:i:s'),'success' => $stocks,], 200);
     }
     public function get_stock_count()
     {

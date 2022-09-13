@@ -9,8 +9,13 @@ use App\Models\StockCategory;
 use App\Models\StockData;
 use App\Models\StockName;
 use App\Models\User;
+use Illuminate\Support\Facades\Validator;
 
 use App\Jobs\UpdateStockData;
+use App\Jobs\UpdateStockDataFindmind;
+
+use App\Models\StockUpdateRecord;
+
 
 class UpdateStockRepository
 {
@@ -24,25 +29,18 @@ class UpdateStockRepository
     }
     public function test()
     {
-        // $responses = Http::pool(fn (Pool $pool) => [
-        //     //finmind台股
-        //     $pool->get('https://api.finmindtrade.com/api/v4/data?dataset=TaiwanStockInfo'),
+        $input = "2022-09-12";
+        $republicdate = date_create($input);
+        $republicdate = $republicdate->modify("-1911 year");
+        $dete0 = ltrim($republicdate->format("Y/m/d"), "0");
 
-        //     //興櫃公司基本資料ESMs
-        //     $pool->get('https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap03_R'),
+        $date = date_create($input);
+        $date1 = date_format($date, "Ymd"); //上市
 
-        //     //上櫃股票基本資料OTCs
-        //     $pool->get('https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap03_O'),
-
-        //     //上市公司基本資料SEMs
-        //     $pool->get('https://openapi.twse.com.tw/v1/opendata/t187ap03_L'),
-
-        //     //股票分類(制式 standard)
-        //     $pool->get('https://bakerychu.com/file/Industry_category.json'),
-        // ]);
-        $stocks_chunked = StockCategory::where('category', "航運業")->first()->StockName;
-
-        return response()->json(['success' => $stocks_chunked], 200);
+        $date = date_format($date, "Y-m-d"); //存資料庫
+        // $date0 = "111/09/12"; //上櫃
+        // $date1 = "20220912"; //上市
+        return response()->json(['success' =>  $date . "   ddddddd   " . $dete0 . "   ddddddd   " . $date1], 200);
     }
     public function update_stock_information()
     {
@@ -84,7 +82,7 @@ class UpdateStockRepository
                 'stock_category_id' => $stock_category_id,
                 'stock_id' => $OTC['SecuritiesCompanyCode'],
                 'stock_name' => $OTC['公司簡稱'],
-                'type' => 2, 'created_at' => date("Y-m-d H:i:s"), 'updated_at' => date("Y-m-d H:i:s")
+                'type' => 2, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')
             ];
             $allstock->push($newdata);
         }
@@ -98,7 +96,7 @@ class UpdateStockRepository
                 'stock_category_id' => $stock_category_id,
                 'stock_id' => $SEM['公司代號'],
                 'stock_name' => $SEM['公司簡稱'],
-                'type' => 3, 'created_at' => date("Y-m-d H:i:s"), 'updated_at' => date("Y-m-d H:i:s")
+                'type' => 3, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')
             ];
             $allstock->push($newdata);
         }
@@ -120,11 +118,34 @@ class UpdateStockRepository
         return response()->json(['success' => $allstock], 200);
     }
 
-    public function update_stock_data()
+    public function update_stock_data_findmind()
     {
+        // UpdateStockDataFindmind::dispatch();
+        //id:4599147 1778
 
-        UpdateStockData::dispatch();
-        
         return response()->json(['success' => '已自動開始更新，請稍等'], 200);
+    }
+
+    public function update_stock_data($request)
+    {
+        $validator = Validator::make($request->all(), [
+            'date' => 'required|date',
+        ], [
+            'required' => '請代入日期',
+            'date.date' => '日期格式錯誤',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()->first()], 401);
+        } else {
+            $input = $request->date;
+            $msg = "日期: " . $input . " 股票資料已更新過";
+            if (!StockUpdateRecord::where('date', $input)->first()) { //如果沒記錄到今天data 就進入
+                UpdateStockData::dispatch($input);
+                $msg = "已自動開始更新 日期: " . $input . " 股票資料,請稍後";
+            }
+
+
+            return response()->json(['success' => $msg], 200);
+        }
     }
 }
