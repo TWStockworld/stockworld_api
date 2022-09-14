@@ -29,18 +29,8 @@ class UpdateStockRepository
     }
     public function test()
     {
-        $input = "2022-09-12";
-        $republicdate = date_create($input);
-        $republicdate = $republicdate->modify("-1911 year");
-        $dete0 = ltrim($republicdate->format("Y/m/d"), "0");
-
-        $date = date_create($input);
-        $date1 = date_format($date, "Ymd"); //上市
-
-        $date = date_format($date, "Y-m-d"); //存資料庫
-        // $date0 = "111/09/12"; //上櫃
-        // $date1 = "20220912"; //上市
-        return response()->json(['success' =>  $date . "   ddddddd   " . $dete0 . "   ddddddd   " . $date1], 200);
+        $today= date_format(now(), "Y-m-d");
+        return response()->json(['success' => $today], 200);
     }
     public function update_stock_information()
     {
@@ -126,18 +116,19 @@ class UpdateStockRepository
         return response()->json(['success' => '已自動開始更新，請稍等'], 200);
     }
 
-    public function update_stock_data($request)
+    public function update_stock_data()
     {
-        $validator = Validator::make($request->all(), [
-            'date' => 'required|date',
-        ], [
-            'required' => '請代入日期',
-            'date.date' => '日期格式錯誤',
-        ]);
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()->first()], 401);
-        } else {
-            $input = $request->date;
+        // $validator = Validator::make($request->all(), [
+        //     'date' => 'required|date',
+        // ], [
+        //     'required' => '請代入日期',
+        //     'date.date' => '日期格式錯誤',
+        // ]);
+        // if ($validator->fails()) {
+        //     return response()->json(['error' => $validator->errors()->first()], 401);
+        // } else {
+            // $input = $request->date;
+            $input= date_format(now(), "Y-m-d");
             $msg = "日期: " . $input . " 股票資料已更新過";
             if (!StockUpdateRecord::where('date', $input)->first()) { //如果沒記錄到今天data 就進入
                 UpdateStockData::dispatch($input);
@@ -146,6 +137,6 @@ class UpdateStockRepository
 
 
             return response()->json(['success' => $msg], 200);
-        }
+        // }
     }
 }

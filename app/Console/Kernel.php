@@ -4,9 +4,12 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use App\Jobs\UpdateStockData;
+
 
 class Kernel extends ConsoleKernel
 {
+
     /**
      * Define the application's command schedule.
      *
@@ -15,7 +18,12 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        // $schedule->call(function () {
+        //     $controller = new \App\Http\Controllers\Controller();
+        //     $controller->sendmail();
+        // })->everyMinute();
+        $input= date_format(now(), "Y-m-d");
+        $schedule->job(new UpdateStockData($input))->dailyAt('14:00');
     }
 
     /**
@@ -25,7 +33,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }
