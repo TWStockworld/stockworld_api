@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 |
 
 php artisan route:list 查看可用
+php artisan queue:clear
 php artisan schedule:list 查看排程
 php artisan l5-swagger:generate
 */
@@ -33,7 +34,7 @@ Route::prefix('stock')->group(function () {
     Route::get('test', [StockController::class, 'test']);
     Route::get('update_stock_information', [StockController::class, 'update_stock_information']);
     Route::get('update_stock_data_findmind', [StockController::class, 'update_stock_data_findmind']);
-    Route::get('update_stock_data', [StockController::class, 'update_stock_data']);
+    Route::post('update_stock_data', [StockController::class, 'update_stock_data']);
 
     Route::get('get_stock_category', [StockController::class, 'get_stock_category']);
     Route::get('get_stock_name', [StockController::class, 'get_stock_name']);

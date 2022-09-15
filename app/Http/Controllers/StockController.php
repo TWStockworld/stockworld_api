@@ -30,9 +30,9 @@ class StockController extends Controller
     {
         return $this->UpdateStockRepository->update_stock_data_findmind();
     }
-    public function update_stock_data()
+    public function update_stock_data(Request $request)
     {
-        return $this->UpdateStockRepository->update_stock_data();
+        return $this->UpdateStockRepository->update_stock_data($request);
     }
 
     public function get_stock_category()

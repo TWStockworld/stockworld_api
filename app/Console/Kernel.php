@@ -22,7 +22,7 @@ class Kernel extends ConsoleKernel
         //     $controller = new \App\Http\Controllers\Controller();
         //     $controller->sendmail();
         // })->everyMinute();
-        $input= date_format(now(), "Y-m-d");
+        $input = date_format(now(), "Y-m-d");
         $schedule->job(new UpdateStockData($input))->dailyAt('14:00');
     }
 

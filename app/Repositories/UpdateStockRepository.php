@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Client\Pool;
 
 use App\Models\StockCategory;
-use App\Models\StockData;
 use App\Models\StockName;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
@@ -29,7 +28,7 @@ class UpdateStockRepository
     }
     public function test()
     {
-        $today= date_format(now(), "Y-m-d");
+        $today = date_format(now(), "Y-m-d");
         return response()->json(['success' => $today], 200);
     }
     public function update_stock_information()
@@ -116,27 +115,24 @@ class UpdateStockRepository
         return response()->json(['success' => '已自動開始更新，請稍等'], 200);
     }
 
-    public function update_stock_data()
+    public function update_stock_data($request)
     {
-        // $validator = Validator::make($request->all(), [
-        //     'date' => 'required|date',
-        // ], [
-        //     'required' => '請代入日期',
-        //     'date.date' => '日期格式錯誤',
-        // ]);
-        // if ($validator->fails()) {
-        //     return response()->json(['error' => $validator->errors()->first()], 401);
-        // } else {
-            // $input = $request->date;
-            $input= date_format(now(), "Y-m-d");
+        $validator = Validator::make($request->all(), [
+            'date' => 'required|date',
+        ], [
+            'required' => '請代入日期',
+            'date.date' => '日期格式錯誤',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()->first()], 401);
+        } else {
+            $input = $request->date;
             $msg = "日期: " . $input . " 股票資料已更新過";
             if (!StockUpdateRecord::where('date', $input)->first()) { //如果沒記錄到今天data 就進入
                 UpdateStockData::dispatch($input);
                 $msg = "已自動開始更新 日期: " . $input . " 股票資料,請稍後";
             }
-
-
             return response()->json(['success' => $msg], 200);
-        // }
+        }
     }
 }

@@ -18,6 +18,5 @@ class Controller extends BaseController
             $message->from('root@bakerychu.com', 'root');
             $message->to('likeyou600@gmail.com', 'bakery')->subject('網域發信');
         });
-        dd("success");
     }
 }

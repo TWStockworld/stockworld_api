@@ -1,0 +1,10 @@
+[
+    {
+        "type": "File",
+        "name": "/var/www/stockworld_api/storage/logs/laravel.log",
+        "parent_id": null,
+        "workspaceRoot": "/var/www/stockworld_api",
+        "workspacePath": "storage/logs/laravel.log",
+        "id": "NwAKiyvPJDSrL90M"
+    }
+]
