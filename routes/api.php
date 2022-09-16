@@ -20,6 +20,8 @@ php artisan route:list 查看可用
 php artisan queue:clear
 php artisan schedule:list 查看排程
 php artisan l5-swagger:generate
+    //     在linux crontab -e 
+    //     添加 * * * * * /usr/bin/php /var/www/stockworld_api/artisan schedule:run >> /dev/null 2>&1
 */
 
 
