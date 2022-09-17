@@ -39,7 +39,7 @@ Route::prefix('stock')->group(function () {
     Route::post('update_stock_data', [StockController::class, 'update_stock_data']);
 
     Route::get('get_stock_category', [StockController::class, 'get_stock_category']);
-    Route::get('get_stock_name', [StockController::class, 'get_stock_name']);
+    Route::post('get_stock_name', [StockController::class, 'get_stock_name']);
     Route::get('get_stock_count', [StockController::class, 'get_stock_count']);
     Route::get('get_stock', [StockController::class, 'get_stock']);
 

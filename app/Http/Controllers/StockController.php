@@ -39,9 +39,9 @@ class StockController extends Controller
     {
         return $this->GetStockRepository->get_stock_category();
     }
-    public function get_stock_name()
+    public function get_stock_name(Request $request)
     {
-        return $this->GetStockRepository->get_stock_name();
+        return $this->GetStockRepository->get_stock_name($request);
     }
     public function get_stock_count()
     {

@@ -23,12 +23,10 @@ class GetStockRepository
     {
         return response()->json(['success' => StockCategory::all()], 200);
     }
-    public function get_stock_name()
+    public function get_stock_name($request)
     {
-        $stocks = StockCategory::where('category', "電子零組件業")->first()->StockName;
-    
-        // $stocks = StockName::where(['stock_category_id' => 14])->take(80)->get();
-        return response()->json(['count' => $stocks->count(), 'time' => date('Y-m-d H:i:s'),'success' => $stocks,], 200);
+        $stocks = StockCategory::find($request->stock_category_id)->StockName;
+        return response()->json(['count' => $stocks->count(), 'time' => date('Y-m-d H:i:s'), 'success' => $stocks,], 200);
     }
     public function get_stock_count()
     {
@@ -38,7 +36,7 @@ class GetStockRepository
 
     public function get_stock()
     {
-        $stocks = StockData::where('stock_name_id',1654)->get();
+        $stocks = StockData::where('stock_name_id', 1654)->get();
         return response()->json(['count' => $stocks->count(), 'success' => $stocks], 200);
     }
 
@@ -47,10 +45,10 @@ class GetStockRepository
         $startdate = $data->startdate; //'2021-01-01';
         $enddate = $data->enddate; //'2021-12-01';
         $diff = $data->diff;
-        $category = $data->category;
+        $stock_category_id = $data->stock_category_id;
 
-        if ($category != null) {
-            $stocks = StockName::where(['stock_category_id' => $category])->get();
+        if ($stock_category_id != null) {
+            $stocks = StockName::where(['stock_category_id' => $stock_category_id])->get();
             $stock_list = [];
             foreach ($stocks as $stockA) {
                 foreach ($stocks as $stockB) {
