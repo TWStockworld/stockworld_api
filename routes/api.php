@@ -43,10 +43,6 @@ Route::prefix('stock')->group(function () {
     Route::get('get_stock_count', [StockController::class, 'get_stock_count']);
     Route::get('get_stock', [StockController::class, 'get_stock']);
 
-    Route::get('test1', [StockController::class, 'test1']);
-    Route::get('test2', [StockController::class, 'test2']);
-
-
     Route::post('cal_stock', [StockController::class, 'cal_stock']);
 });
 
