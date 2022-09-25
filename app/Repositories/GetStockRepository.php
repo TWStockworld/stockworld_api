@@ -34,9 +34,10 @@ class GetStockRepository
         return response()->json(['count' => $stocks->count(), 'success' => $stocks], 200);
     }
 
-    public function get_stock()
+    public function get_stock($request)
     {
-        $stocks = StockData::where('stock_name_id', 1654)->get();
+        $stock_id = $request->stock_id;
+        $stocks = StockName::where('stock_id', $stock_id)->first()->StockData;
         return response()->json(['count' => $stocks->count(), 'success' => $stocks], 200);
     }
 

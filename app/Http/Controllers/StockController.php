@@ -16,7 +16,7 @@ class StockController extends Controller
         $this->UpdateStockRepository = $UpdateStockRepository;
         $this->GetStockRepository = $GetStockRepository;
     }
-  
+
     public function test()
     {
         return $this->UpdateStockRepository->test();
@@ -47,9 +47,9 @@ class StockController extends Controller
     {
         return $this->GetStockRepository->get_stock_count();
     }
-    public function get_stock()
+    public function get_stock(Request $request)
     {
-        return $this->GetStockRepository->get_stock();
+        return $this->GetStockRepository->get_stock($request);
     }
     public function cal_stock(Request $request)
     {
