@@ -113,7 +113,26 @@ namespace App\Docs;
  *       )
  * )
  * 取得資料
+ *  * @OA\Post(
+ *      path="/api/logout",
+ *      operationId="Logout",
+ *      tags={"Auth"},
+ *      summary="登出",
+ *      description="登出",
+ *      security={
+ *         {
+ *              "Authorization": {}
+ *         }
+ *      },
+ *      @OA\Response(
+ *          response=200,
+ *          description="請求成功"
+ *       )
+ * )
+ * 登出
  */
+
+
 
 class Route
 {

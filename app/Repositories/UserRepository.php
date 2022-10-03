@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class UserRepository
 {
@@ -33,14 +34,15 @@ class UserRepository
                     'name' => $data->name,
                     'account' => $data->account,
                     'email' => $data->email,
-                    'password' => bcrypt($data->password)
+                    'password' => bcrypt($data->password),
+                    'remember_token' => Str::random(10)
                 ]);
                 $token = $user->createToken('Laravel9PassportAuth')->accessToken;
                 return response()->json(['token' => $token], 200);
             } catch (\Illuminate\Database\QueryException $exception) {
                 $errorInfo = $exception->errorInfo;
                 if ($exception->getCode() === '23000') {
-                    $errorInfo='帳號重複';
+                    $errorInfo = '帳號重複';
                 }
                 return response()->json(['errorInfo' => $errorInfo], 402);
             }

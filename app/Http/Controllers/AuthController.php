@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Repositories\UserRepository;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -24,17 +25,17 @@ class AuthController extends Controller
         return $this->userRepository->login($request);
     }
 
-    public function userInfo(Request $request)
+    public function userInfo()
     {
-         $user = auth()->user();
-         return response()->json(['user' => $user], 200);
+        $user = Auth::user();
+        return response()->json(['user' => $user], 200);
 
         //  return response()->json($request->user());
     }
-    
-    public function logout(Request $request)
+
+    public function logout()
     {
-        $request->user()->token()->revoke();
+        Auth::user()->token()->revoke();
         return response()->json([
             'message' => 'Successfully logged out'
         ]);
