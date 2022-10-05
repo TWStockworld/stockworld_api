@@ -34,9 +34,27 @@ class GetStockRepository
         return response()->json(['count' => $stocks->count(), 'success' => $stocks], 200);
     }
 
+
     public function get_stock($request)
     {
         $stock_id = $request->stock_id;
+        $stocks = StockName::where('stock_id', $stock_id)->first()->StockData;
+        return response()->json(['count' => $stocks->count(), 'success' => $stocks], 200);
+    }
+
+
+    public function get_bulletin()
+    {
+        $stocks = StockName::where('stock_id', $stock_id)->first()->StockData;
+        return response()->json(['count' => $stocks->count(), 'success' => $stocks], 200);
+    }
+    public function get_stock_special_kind()
+    {
+        $stocks = StockName::where('stock_id', $stock_id)->first()->StockData;
+        return response()->json(['count' => $stocks->count(), 'success' => $stocks], 200);
+    }
+    public function get_bulletin()
+    {
         $stocks = StockName::where('stock_id', $stock_id)->first()->StockData;
         return response()->json(['count' => $stocks->count(), 'success' => $stocks], 200);
     }
@@ -55,7 +73,8 @@ class GetStockRepository
                 foreach ($stocks as $stockB) {
                     $stockA_id = $stockA->stock_id;
                     $stockB_id = $stockB->stock_id;
-
+                    $stockA_name = StockName::get_stock_name($stockA_id);
+                    $stockB_name = StockName::get_stock_name($stockB_id);
                     if ($stockA_id != $stockB_id) {
                         list($up, $down, $stockA_datas, $stockB_datas) = self::cal_two_stock($startdate, $enddate, $diff, $stockA_id, $stockB_id);
                         $result = ['up' => $up, 'down' => $down, 'stockA_datas' => $stockA_datas, 'stockB_datas' => $stockB_datas];
@@ -65,8 +84,9 @@ class GetStockRepository
                 }
             }
             usort($stock_list, function ($a, $b) {
-                return $a['up'] <=> $b['up'];
+                return $a['up'] < $b['up'];
             });
+            return response()->json(['success' => $stock_list[0]], 200);
         } else {
             $stockA = $data->stockA;
             $stockB = $data->stockB;
@@ -80,7 +100,7 @@ class GetStockRepository
             return response()->json(['success' => $sendresult, 'stockA_datas' => $stockA_datas, 'stockB_datas' => $stockB_datas], 200);
         }
 
-        return response()->json(['success' => $stock_list], 200);
+        // return response()->json(['success' => $stock_list], 200);
     }
 
 

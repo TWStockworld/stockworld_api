@@ -13,4 +13,8 @@ class Bulletin extends Model
     {
         return $this->hasMany(StockSpecialKindDetail::class);
     }
+    public function StockSpecialKind()
+    {
+        return $this->hasMany(StockSpecialKind::class);
+    }
 }

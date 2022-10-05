@@ -9,6 +9,10 @@ class StockSpecialKind extends Model
 {
     use HasFactory;
     protected $guarded = [];
+    public function Bulletin()
+    {
+        return $this->belongsTo(Bulletin::class);
+    }
     public function StockSpecialKindDetail()
     {
         return $this->hasMany(StockSpecialKindDetail::class);
