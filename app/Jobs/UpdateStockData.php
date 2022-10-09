@@ -80,11 +80,16 @@ class UpdateStockData implements ShouldQueue
                             $spread = doubleval($newstock->values()->pluck(3)->get(0));
 
 
+                            $volume = $newstock->values()->pluck(8)->get(0);
+                            $money = $newstock->values()->pluck(9)->get(0);
+                            $turnover = $newstock->values()->pluck(10)->get(0);
+
                             $day_change = round(($spread / ($close - $spread)) * 100, 2);
                             $stock_data = [
                                 'date' => $date, 'stock_name_id' => $stock_name_id, 'open' => $open,
                                 'up' => $up, 'down' => $down,
-                                'close' => $close, 'day_change' => $day_change,
+                                'close' => $close, 'day_change' => $day_change, 'volume' => $volume,
+                                'money' => $money, 'turnover' => $turnover,
                                 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')
                             ];
                             $insert_data->push($stock_data);
@@ -120,11 +125,17 @@ class UpdateStockData implements ShouldQueue
                             $value = $newstock->values()->pluck(10)->get(0);
                             $spread = doubleval($sign . $value);
 
+                            $volume = $newstock->values()->pluck(2)->get(0);
+                            $money = $newstock->values()->pluck(4)->get(0);
+                            $turnover = $newstock->values()->pluck(3)->get(0);
+
+
                             $day_change = round(($spread / ($close - $spread)) * 100, 2);
                             $stock_data = [
                                 'date' => $date, 'stock_name_id' => $stock_name_id, 'open' => $open,
                                 'up' => $up, 'down' => $down,
-                                'close' => $close, 'day_change' => $day_change,
+                                'close' => $close, 'day_change' => $day_change, 'volume' => $volume,
+                                'money' => $money, 'turnover' => $turnover,
                                 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')
                             ];
                             $insert_data->push($stock_data);

@@ -26,11 +26,14 @@ class UpdateStockDataFindmind implements ShouldQueue
     }
     public function handle()
     {
-        $stocks_chunked = StockName::all();
-        $stocks_chunked=$stocks_chunked->chunk(7);
+        // $stocks_chunked = StockName::all();
+        $stocks_chunked = StockName::take(1200)->get();
+        // $stocks_chunked = StockName::skip(1200)->take(PHP_INT_MAX)->get();
+
+        $stocks_chunked = $stocks_chunked->chunk(7);
         // $stocks_chunked = StockCategory::where('category', "電子零組件業")->first()->StockName->chunk(7);
         $start = '2010-01-01';
-        $end = '2022-09-09';
+        $end = '2022-10-07';
         foreach ($stocks_chunked as $stocks_chunk) {
             $stock_request = fn (Pool $pool) => $stocks_chunk->map(
                 fn (object $stock) => $pool->get(
@@ -55,7 +58,8 @@ class UpdateStockDataFindmind implements ShouldQueue
                             $stock_data = [
                                 'date' => $data['date'], 'stock_name_id' => $stock_name_id, 'open' => $data['open'],
                                 'up' => $data['max'], 'down' => $data['min'],
-                                'close' => $data['close'], 'day_change' => $day_change,
+                                'close' => $data['close'], 'day_change' => $day_change, 'volume' => $data['Trading_Volume'],
+                                'money' => $data['Trading_money'], 'turnover' => $data['Trading_turnover'],
                                 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')
                             ];
                             $insert_data->push($stock_data);
