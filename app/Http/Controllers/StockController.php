@@ -51,6 +51,18 @@ class StockController extends Controller
     {
         return $this->GetStockRepository->get_stock($request);
     }
+    public function get_bulletin()
+    {
+        return $this->GetStockRepository->get_bulletin();
+    }
+    public function get_stock_special_kind(Request $request)
+    {
+        return $this->GetStockRepository->get_stock_special_kind($request);
+    }
+    public function get_stock_special_kind_detail(Request $request)
+    {
+        return $this->GetStockRepository->get_stock_special_kind_detail($request);
+    }
     public function cal_stock(Request $request)
     {
         return $this->GetStockRepository->cal_stock($request);

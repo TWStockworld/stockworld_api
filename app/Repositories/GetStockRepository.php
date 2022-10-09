@@ -2,9 +2,11 @@
 
 namespace App\Repositories;
 
+use App\Models\Bulletin;
 use App\Models\StockCategory;
 use App\Models\StockData;
 use App\Models\StockName;
+use App\Models\StockSpecialKindDetail;
 
 class GetStockRepository
 {
@@ -45,18 +47,26 @@ class GetStockRepository
 
     public function get_bulletin()
     {
-        $stocks = StockName::where('stock_id', $stock_id)->first()->StockData;
-        return response()->json(['count' => $stocks->count(), 'success' => $stocks], 200);
+        $bulletins = Bulletin::all();
+        return response()->json(['success' => $bulletins], 200);
     }
-    public function get_stock_special_kind()
+    public function get_stock_special_kind($request)
     {
-        $stocks = StockName::where('stock_id', $stock_id)->first()->StockData;
-        return response()->json(['count' => $stocks->count(), 'success' => $stocks], 200);
+        $bulletin_id = $request->bulletin_id;
+        $stock_special_kind = Bulletin::find($bulletin_id)->StockSpecialKind;
+        return response()->json(['success' => $stock_special_kind], 200);
     }
-    public function get_bulletin()
+    public function get_stock_special_kind_detail($request)
     {
-        $stocks = StockName::where('stock_id', $stock_id)->first()->StockData;
-        return response()->json(['count' => $stocks->count(), 'success' => $stocks], 200);
+        $bulletin_id = $request->bulletin_id;
+        $stock_special_kind_id = $request->stock_special_kind_id;
+        $stock_special_kind_detail = StockSpecialKindDetail::where(['bulletin_id' => $bulletin_id, 'stock_special_kind_id' => $stock_special_kind_id])->get();
+
+        $stocks = collect();
+        $stock_special_kind_detail->map(function ($item) use ($stocks) {
+            $stocks->push($item->stockname);
+        });
+        return response()->json(['success' => $stocks], 200);
     }
 
     public function cal_stock($data)
@@ -73,11 +83,9 @@ class GetStockRepository
                 foreach ($stocks as $stockB) {
                     $stockA_id = $stockA->stock_id;
                     $stockB_id = $stockB->stock_id;
-                    $stockA_name = StockName::get_stock_name($stockA_id);
-                    $stockB_name = StockName::get_stock_name($stockB_id);
                     if ($stockA_id != $stockB_id) {
                         list($up, $down, $stockA_datas, $stockB_datas) = self::cal_two_stock($startdate, $enddate, $diff, $stockA_id, $stockB_id);
-                        $result = ['up' => $up, 'down' => $down, 'stockA_datas' => $stockA_datas, 'stockB_datas' => $stockB_datas];
+                        $result = ['up' => $up, 'down' => $down, 'stockA_id' => $stockA_id, 'stockB_id' => $stockB_id, 'stockA_datas' => $stockA_datas, 'stockB_datas' => $stockB_datas];
                         array_push($stock_list, $result);
                         // break;
                     }
@@ -86,7 +94,14 @@ class GetStockRepository
             usort($stock_list, function ($a, $b) {
                 return $a['up'] < $b['up'];
             });
-            return response()->json(['success' => $stock_list[0]], 200);
+            $first = $stock_list[0];
+            $stockA_id = $first['stockA_id'];
+            $stockB_id = $first['stockB_id'];
+            $stockA_name = StockName::get_stock_name($stockA_id);
+            $stockB_name = StockName::get_stock_name($stockB_id);
+            $sendresult = $stockA_name . "(" . $stockA_id . ")" . "漲，" . $stockB_name . "(" . $stockB_id . ")" . $diff . "天後 也跟著漲" . $first['up'] . "%    ,     " . $stockA_name . "(" . $stockA_id . ")" . "跌，" . $stockB_name . "(" . $stockB_id . ")" . $diff . "天後 也跟著跌" . $first['down'] . "%";
+
+            return response()->json(['success' => $sendresult, 'stockA_datas' => $stock_list[0]['stockA_datas'], 'stockB_datas' => $stock_list[0]['stockB_datas']], 200);
         } else {
             $stockA = $data->stockA;
             $stockB = $data->stockB;

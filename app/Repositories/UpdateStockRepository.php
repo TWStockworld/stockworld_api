@@ -29,8 +29,9 @@ class UpdateStockRepository
     }
     public function test()
     {
-        $today = date_format(now(), "Y-m-d");
-        return response()->json(['success' => $today], 200);
+        // $stocks_chunked = StockName::skip(1)->take(PHP_INT_MAX)->get();
+        $stocks_chunked = StockName::take(1550)->get();
+        return response()->json(['success' => $stocks_chunked], 200);
     }
     public function update_stock_information()
     {
@@ -41,8 +42,6 @@ class UpdateStockRepository
     public function update_stock_data_findmind()
     {
         // UpdateStockDataFindmind::dispatch();
-        //id:4599147 1778
-
         return response()->json(['success' => '已自動開始更新，請稍等'], 200);
     }
 

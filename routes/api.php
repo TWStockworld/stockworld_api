@@ -16,12 +16,33 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 
+php artisan make:model Name --migration
+
+php artisan make:migration update_flights_table
+
+php artisan migrate
+php artisan migrate:rollback
+
 php artisan route:list 查看可用
 php artisan queue:clear
 php artisan schedule:list 查看排程
 php artisan l5-swagger:generate
     //     在linux crontab -e 
     //     添加 * * * * * /usr/bin/php /var/www/stockworld_api/artisan schedule:run >> /dev/null 2>&1
+
+supervisor 設定
+queue-worker.conf
+
+[program:queue-worker]
+process_name=%(program_name)s_%(process_num)02d
+command=php /var/www/stockworld_api/artisan queue:work --timeout=86400 --tries=2
+autostart=true
+autorestart=true
+user=root
+numprocs=1
+redirect_stderr=true
+stdout_logfile=/var/www/stockworld_api/storage/logs/supervisord.log
+
 */
 
 
@@ -42,6 +63,9 @@ Route::prefix('stock')->group(function () {
     Route::post('get_stock_name', [StockController::class, 'get_stock_name']);
     Route::get('get_stock_count', [StockController::class, 'get_stock_count']);
     Route::post('get_stock', [StockController::class, 'get_stock']);
+    Route::get('get_bulletin', [StockController::class, 'get_bulletin']);
+    Route::post('get_stock_special_kind', [StockController::class, 'get_stock_special_kind']);
+    Route::post('get_stock_special_kind_detail', [StockController::class, 'get_stock_special_kind_detail']);
 
     Route::post('cal_stock', [StockController::class, 'cal_stock']);
 });
