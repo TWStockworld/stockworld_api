@@ -29,9 +29,18 @@ class UpdateStockRepository
     }
     public function test()
     {
-        // $stocks_chunked = StockName::skip(1)->take(PHP_INT_MAX)->get();
-        $stocks_chunked = StockName::take(1550)->get();
-        return response()->json(['success' => $stocks_chunked], 200);
+        $stockA_datas = StockName::where(['stock_id' => 1101])->first()->StockData->where('date', '>=', '2018-01-01')->where('date', '<=', '2022-09-01')->values();
+        $stockB_datas = StockName::where(['stock_id' => 1102])->first()->StockData->where('date', '>=', '2018-01-01')->where('date', '<=', '2022-09-01')->values();
+
+        $a = '';
+        $out = collect();
+        $out->put('1101', $stockA_datas);
+        $out->put('1102', $stockB_datas);
+        $test = 1101;
+        if ($out->has($test)) {
+            $a = $out->get($test);
+        }
+        return response()->json(['success' => $a], 200);
     }
     public function update_stock_information()
     {
