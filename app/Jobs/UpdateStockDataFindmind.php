@@ -27,12 +27,12 @@ class UpdateStockDataFindmind implements ShouldQueue
     public function handle()
     {
         // $stocks_chunked = StockName::all();
-        $stocks_chunked = StockName::take(1200)->get();
-        // $stocks_chunked = StockName::skip(1200)->take(PHP_INT_MAX)->get();
+        // $stocks_chunked = StockName::take(1550)->get();
+        $stocks_chunked = StockName::skip(1550)->take(PHP_INT_MAX)->get();
 
         $stocks_chunked = $stocks_chunked->chunk(7);
         // $stocks_chunked = StockCategory::where('category', "電子零組件業")->first()->StockName->chunk(7);
-        $start = '2010-01-01';
+        $start = '2000-01-01';
         $end = '2022-10-07';
         foreach ($stocks_chunked as $stocks_chunk) {
             $stock_request = fn (Pool $pool) => $stocks_chunk->map(

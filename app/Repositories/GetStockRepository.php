@@ -3,10 +3,13 @@
 namespace App\Repositories;
 
 use App\Models\Bulletin;
+use App\Models\StockCalculate;
 use App\Models\StockCategory;
 use App\Models\StockData;
 use App\Models\StockName;
 use App\Models\StockSpecialKindDetail;
+
+use App\Jobs\CalculateStock;
 
 class GetStockRepository
 {
@@ -77,77 +80,64 @@ class GetStockRepository
         $stock_category_id = $data->stock_category_id;
 
         if ($stock_category_id != null) {
-            $stocks = StockName::where(['stock_category_id' => $stock_category_id])->get();
-            $stock_list = [];
-            foreach ($stocks as $stockA) {
-                foreach ($stocks as $stockB) {
-                    $stockA_id = $stockA->stock_id;
-                    $stockB_id = $stockB->stock_id;
-                    if ($stockA_id != $stockB_id) {
-                        list($up, $down, $stockA_datas, $stockB_datas) = self::cal_two_stock($startdate, $enddate, $diff, $stockA_id, $stockB_id);
-                        $result = ['up' => $up, 'down' => $down, 'stockA_id' => $stockA_id, 'stockB_id' => $stockB_id, 'stockA_datas' => $stockA_datas, 'stockB_datas' => $stockB_datas];
-                        array_push($stock_list, $result);
-                        // break;
-                    }
-                }
-            }
-            usort($stock_list, function ($a, $b) {
-                return $a['up'] < $b['up'];
-            });
-            $first = $stock_list[0];
-            $stockA_id = $first['stockA_id'];
-            $stockB_id = $first['stockB_id'];
-            $stockA_name = StockName::get_stock_name($stockA_id);
-            $stockB_name = StockName::get_stock_name($stockB_id);
-            $sendresult = $stockA_name . "(" . $stockA_id . ")" . "漲，" . $stockB_name . "(" . $stockB_id . ")" . $diff . "天後 也跟著漲" . $first['up'] . "%    ,     " . $stockA_name . "(" . $stockA_id . ")" . "跌，" . $stockB_name . "(" . $stockB_id . ")" . $diff . "天後 也跟著跌" . $first['down'] . "%";
+            CalculateStock::dispatch($startdate, $enddate, $diff, $stock_category_id);
 
-            return response()->json(['success' => $sendresult, 'stockA_datas' => $stock_list[0]['stockA_datas'], 'stockB_datas' => $stock_list[0]['stockB_datas']], 200);
+            return response()->json(['success' => '已自動開始計算，請稍等'], 200);
         } else {
-            $stockA = $data->stockA;
-            $stockB = $data->stockB;
-            $stockA_name = StockName::get_stock_name($stockA);
-            $stockB_name = StockName::get_stock_name($stockB);
+            // $stockA = $data->stockA;
+            // $stockB = $data->stockB;
+            // $stockA_name = StockName::get_stock_name($stockA);
+            // $stockB_name = StockName::get_stock_name($stockB);
 
-            list($up, $down, $stockA_datas, $stockB_datas) = self::cal_two_stock($startdate, $enddate, $diff, $stockA, $stockB);
+            // list($up, $down) = self::cal_two_stock($startdate, $enddate, $diff, $stockA, $stockB);
 
-            $sendresult = $stockA_name . "(" . $stockA . ")" . "漲，" . $stockB_name . "(" . $stockB . ")" . $diff . "天後 也跟著漲" . $up . "%    ,     " . $stockA_name . "(" . $stockA . ")" . "跌，" . $stockB_name . "(" . $stockB . ")" . $diff . "天後 也跟著跌" . $down . "%";
+            // $sendresult = $stockA_name . "(" . $stockA . ")" . "漲，" . $stockB_name . "(" . $stockB . ")" . $diff . "天後 也跟著漲" . $up . "%    ,     " . $stockA_name . "(" . $stockA . ")" . "跌，" . $stockB_name . "(" . $stockB . ")" . $diff . "天後 也跟著跌" . $down . "%";
 
-            return response()->json(['success' => $sendresult, 'stockA_datas' => $stockA_datas, 'stockB_datas' => $stockB_datas], 200);
+            // return response()->json(['success' => $sendresult, 'stockA_datas' => $stockA_datas, 'stockB_datas' => $stockB_datas], 200);
         }
 
         // return response()->json(['success' => $stock_list], 200);
     }
-
-
-    public function cal_two_stock($startdate, $enddate, $diff, $stockA, $stockB)
+    public function cal_two_stock($data)
     {
 
+        $startdate = $data->startdate;
+        $enddate = $data->enddate;
+        $diff = $data->diff;
+        $stockA = $data->stockA;
+        $stockB = $data->stockB;
+
         $stockA_datas = StockName::where(['stock_id' => $stockA])->first()->StockData->where('date', '>=', $startdate)->where('date', '<=', $enddate)->values();
-        $stockB_datas = StockName::where(['stock_id' => $stockB])->first()->StockData->where('date', '>=', $startdate)->collect()->skip($diff)->take($stockA_datas->count())->values();
-        if ($stockA_datas->count() != 0 && $stockB_datas->count() != 0) {
+        if (StockName::where(['stock_id' => $stockB])->first()->StockData->where('date', $stockA_datas[0]['date'])->count() != 0) {
+            $stockB_datas = StockName::where(['stock_id' => $stockB])->first()->StockData->where('date', '>=', $stockA_datas[0]['date'])->collect()->skip($diff)->take($stockA_datas->count())->values();
+            if ($stockA_datas->count() != 0 && $stockB_datas->count() != 0 && ($stockA_datas->count() == $stockB_datas->count())) {
+                $a = 0;
+                $b = 0;
+                $c = 0;
+                $d = 0;
+                $days = $stockA_datas->count();
 
-            $a = 0;
-            $b = 0;
-            $c = 0;
-            $d = 0;
-            $days = $stockA_datas->count();
-
-            for ($i = 0; $i < $days; $i++) {
-                if ($stockA_datas[$i]['day_change'] > 0 && $stockB_datas[$i]['day_change'] > 0) {
-                    $a++;
-                } else if ($stockA_datas[$i]['day_change'] > 0 && $stockB_datas[$i]['day_change'] <= 0) {
-                    $b++;
-                } else if ($stockA_datas[$i]['day_change'] <= 0 && $stockB_datas[$i]['day_change'] > 0) {
-                    $c++;
-                } else if ($stockA_datas[$i]['day_change'] <= 0 && $stockB_datas[$i]['day_change'] <= 0) {
-                    $d++;
+                for ($i = 0; $i < $days; $i++) {
+                    if ($stockA_datas[$i]['day_change'] > 0 && $stockB_datas[$i]['day_change'] > 0) {
+                        $a++;
+                    } else if ($stockA_datas[$i]['day_change'] > 0 && $stockB_datas[$i]['day_change'] <= 0) {
+                        $b++;
+                    } else if ($stockA_datas[$i]['day_change'] <= 0 && $stockB_datas[$i]['day_change'] > 0) {
+                        $c++;
+                    } else if ($stockA_datas[$i]['day_change'] <= 0 && $stockB_datas[$i]['day_change'] <= 0) {
+                        $d++;
+                    }
                 }
+                //A漲 B x天後 也跟著漲
+                $up = round($a / ($a + $b), 2) * 100;
+                //A跌B x天後 也跟著跌
+                $down = round($d / ($c + $d), 2) * 100;
+                return response()->json(['success' =>  $up . ' stop ' . $down], 200);
+            } else {
+                return response()->json(['no' => 'no'], 200);
             }
-            //A漲 B x天後 也跟著漲
-            $up = round($a / ($a + $b), 2) * 100;
-            //A跌B x天後 也跟著跌
-            $down = round($d / ($c + $d), 2) * 100;
-            return [$up, $down, $stockA_datas, $stockB_datas];
+        } else {
+            return response()->json(['no' => 'no'], 200);
         }
     }
 }

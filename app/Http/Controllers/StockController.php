@@ -67,6 +67,10 @@ class StockController extends Controller
     {
         return $this->GetStockRepository->cal_stock($request);
     }
+    public function cal_two_stock(Request $request)
+    {
+        return $this->GetStockRepository->cal_two_stock($request);
+    }
     /**
      * Display a listing of the resource.
      *

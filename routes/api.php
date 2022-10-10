@@ -25,6 +25,8 @@ php artisan migrate:rollback
 
 php artisan route:list 查看可用
 php artisan queue:clear
+sudo supervisorctl restart queue-worker:queue-worker_00
+
 php artisan schedule:list 查看排程
 php artisan l5-swagger:generate
     //     在linux crontab -e 
@@ -67,7 +69,8 @@ Route::prefix('stock')->group(function () {
     Route::post('get_stock_special_kind', [StockController::class, 'get_stock_special_kind']);
     Route::post('get_stock_special_kind_detail', [StockController::class, 'get_stock_special_kind_detail']);
 
-    Route::post('cal_stock', [StockController::class, 'cal_stock']);
+    Route::post('cal_stockss', [StockController::class, 'cal_stock']);
+    Route::post('cal_two_stock', [StockController::class, 'cal_two_stock']);
 });
 
 Route::middleware('auth:api')->group(function () {
