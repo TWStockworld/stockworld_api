@@ -14,12 +14,12 @@ use Illuminate\Http\Client\Pool;
 use App\Models\StockCategory;
 use App\Models\StockName;
 
-class UpdateStockInformation implements ShouldQueue
+class UpdateStockInformationJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     public $tries = 2;
 
- 
+
     public function handle()
     {
         $responses = Http::pool(fn (Pool $pool) => [

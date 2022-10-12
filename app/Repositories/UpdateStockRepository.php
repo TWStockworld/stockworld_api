@@ -10,9 +10,9 @@ use App\Models\StockName;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 
-use App\Jobs\UpdateStockData;
-use App\Jobs\UpdateStockDataFindmind;
-use App\Jobs\UpdateStockInformation;
+use App\Jobs\UpdateStockDataJob;
+use App\Jobs\UpdateStockDataFindmindJob;
+use App\Jobs\UpdateStockInformationJob;
 
 use App\Models\StockUpdateRecord;
 
@@ -54,13 +54,13 @@ class UpdateStockRepository
 
     public function update_stock_information()
     {
-        UpdateStockInformation::dispatch();
+        UpdateStockInformationJob::dispatch();
         return response()->json(['success' => '已自動開始更新，請稍等'], 200);
     }
 
     public function update_stock_data_findmind()
     {
-        // UpdateStockDataFindmind::dispatch();
+        // UpdateStockDataFindmindJob::dispatch();
         return response()->json(['success' => '已自動開始更新，請稍等'], 200);
     }
 
@@ -78,7 +78,7 @@ class UpdateStockRepository
             $input = $request->date;
             $msg = "日期: " . $input . " 股票資料已更新過";
             if (!StockUpdateRecord::where('date', $input)->first()) { //如果沒記錄到今天data 就進入
-                UpdateStockData::dispatch($input);
+                UpdateStockDataJob::dispatch($input);
                 $msg = "已自動開始更新 日期: " . $input . " 股票資料,請稍後";
             }
             return response()->json(['success' => $msg], 200);

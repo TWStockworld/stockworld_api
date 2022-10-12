@@ -15,7 +15,7 @@ use App\Models\StockCategory;
 use App\Models\StockData;
 use App\Models\StockName;
 
-class UpdateStockDataFindmind implements ShouldQueue
+class UpdateStockDataFindmindJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     public $tries = 2;

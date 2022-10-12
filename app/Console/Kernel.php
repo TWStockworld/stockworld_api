@@ -4,8 +4,8 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use App\Jobs\UpdateStockData;
-use App\Jobs\UpdateStockInformation;
+use App\Jobs\UpdateStockDataJob;
+use App\Jobs\UpdateStockInformationJob;
 
 
 class Kernel extends ConsoleKernel
@@ -23,9 +23,9 @@ class Kernel extends ConsoleKernel
         //     $controller = new \App\Http\Controllers\Controller();
         //     $controller->sendmail();
         // })->everyMinute();
-        $schedule->job(new UpdateStockInformation)->dailyAt('13:50');
+        $schedule->job(new UpdateStockInformationJob)->dailyAt('13:50');
         $input = date_format(now(), "Y-m-d");
-        $schedule->job(new UpdateStockData($input))->dailyAt('14:00');
+        $schedule->job(new UpdateStockDataJob($input))->dailyAt('14:00');
     }
 
     /**

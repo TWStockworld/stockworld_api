@@ -9,7 +9,7 @@ use App\Models\StockData;
 use App\Models\StockName;
 use App\Models\StockSpecialKindDetail;
 
-use App\Jobs\CalculateStock;
+use App\Jobs\CalculateStockJob;
 
 class GetStockRepository
 {
@@ -80,7 +80,7 @@ class GetStockRepository
         $stock_category_id = $data->stock_category_id;
 
         if ($stock_category_id != null) {
-            CalculateStock::dispatch($startdate, $enddate, $diff, $stock_category_id);
+            CalculateStockJob::dispatch($startdate, $enddate, $diff, $stock_category_id);
 
             return response()->json(['success' => '已自動開始計算，請稍等'], 200);
         }

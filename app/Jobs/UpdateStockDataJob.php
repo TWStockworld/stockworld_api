@@ -15,7 +15,7 @@ use App\Models\StockUpdateRecord;
 use App\Models\StockData;
 use App\Models\StockName;
 
-class UpdateStockData implements ShouldQueue
+class UpdateStockDataJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     public $tries = 2;
