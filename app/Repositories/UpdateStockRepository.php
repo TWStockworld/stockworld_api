@@ -29,19 +29,29 @@ class UpdateStockRepository
     }
     public function test()
     {
-        $stockA_datas = StockName::where(['stock_id' => 1101])->first()->StockData->where('date', '>=', '2018-01-01')->where('date', '<=', '2022-09-01')->values();
-        $stockB_datas = StockName::where(['stock_id' => 1102])->first()->StockData->where('date', '>=', '2018-01-01')->where('date', '<=', '2022-09-01')->values();
-
-        $a = '';
-        $out = collect();
-        $out->put('1101', $stockA_datas);
-        $out->put('1102', $stockB_datas);
-        $test = 1101;
-        if ($out->has($test)) {
-            $a = $out->get($test);
-        }
-        return response()->json(['success' => $a], 200);
+        $stocks = StockName::where('type', 3)->get();
+        return response()->json(['success' => $stocks], 200);
     }
+    public function test1()
+    {
+
+        $as = collect([2, 4, 5, 8]);
+        $bs = collect([1, 3, 5, 7]);
+        $out = collect();
+        foreach ($as as $a) {
+            foreach ($bs as $b) {
+                for ($c_diff = 1; $c_diff <= 5; $c_diff++) {
+                    if (intval($a) % 2 != 0) {
+                        break 2;
+                    }
+                    $out->push($a . $b);
+                }
+            }
+        }
+        return response()->json(['success' => $out], 200);
+    }
+
+
     public function update_stock_information()
     {
         UpdateStockInformation::dispatch();

@@ -6,5 +6,61 @@
         "workspaceRoot": "/var/www/stockworld_api",
         "workspacePath": "storage/logs/laravel.log",
         "id": "NwAKiyvPJDSrL90M"
+    },
+    {
+        "type": "Directory",
+        "name": "/var/www/stockworld_api/app/Http/Controllers",
+        "parent_id": null,
+        "workspaceRoot": "/var/www/stockworld_api",
+        "workspacePath": "app/Http/Controllers",
+        "id": "54r8xZaYenE9Ucok"
+    },
+    {
+        "type": "Directory",
+        "name": "/var/www/stockworld_api/database/migrations",
+        "parent_id": null,
+        "workspaceRoot": "/var/www/stockworld_api",
+        "workspacePath": "database/migrations",
+        "id": "z4wa1IcJAdT60gW5"
+    },
+    {
+        "type": "File",
+        "name": "/var/www/stockworld_api/routes/api.php",
+        "parent_id": null,
+        "workspaceRoot": "/var/www/stockworld_api",
+        "workspacePath": "routes/api.php",
+        "id": "BSwmrFpC3K625WMe"
+    },
+    {
+        "type": "Directory",
+        "name": "/var/www/stockworld_api/app/Models",
+        "parent_id": null,
+        "workspaceRoot": "/var/www/stockworld_api",
+        "workspacePath": "app/Models",
+        "id": "NJAEa3osnGmzxT0k"
+    },
+    {
+        "type": "Directory",
+        "name": "/var/www/stockworld_api/app/Jobs",
+        "parent_id": null,
+        "workspaceRoot": "/var/www/stockworld_api",
+        "workspacePath": "app/Jobs",
+        "id": "wRcYnvjk5xOlNS0g"
+    },
+    {
+        "type": "File",
+        "name": "/var/www/stockworld_api/app/Console/Kernel.php",
+        "parent_id": null,
+        "workspaceRoot": "/var/www/stockworld_api",
+        "workspacePath": "app/Console/Kernel.php",
+        "id": "L9230V4wSDohbQZR"
+    },
+    {
+        "type": "Directory",
+        "name": "/var/www/stockworld_api/app/Repositories",
+        "parent_id": null,
+        "workspaceRoot": "/var/www/stockworld_api",
+        "workspacePath": "app/Repositories",
+        "id": "EvY2dQAIXexiBfO8"
     }
 ]

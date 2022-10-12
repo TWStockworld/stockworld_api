@@ -69,8 +69,8 @@ Route::prefix('stock')->group(function () {
     Route::post('get_stock_special_kind', [StockController::class, 'get_stock_special_kind']);
     Route::post('get_stock_special_kind_detail', [StockController::class, 'get_stock_special_kind_detail']);
 
-    Route::post('cal_stockss', [StockController::class, 'cal_stock']);
-    Route::post('cal_two_stock', [StockController::class, 'cal_two_stock']);
+    Route::post('cal_stock_category', [StockController::class, 'cal_stock_category']);
+    Route::post('cal_stock', [StockController::class, 'cal_stock']);
 });
 
 Route::middleware('auth:api')->group(function () {

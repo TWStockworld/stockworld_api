@@ -72,7 +72,7 @@ class GetStockRepository
         return response()->json(['success' => $stocks], 200);
     }
 
-    public function cal_stock($data)
+    public function cal_stock_category($data)
     {
         $startdate = $data->startdate; //'2021-01-01';
         $enddate = $data->enddate; //'2021-12-01';
@@ -83,33 +83,31 @@ class GetStockRepository
             CalculateStock::dispatch($startdate, $enddate, $diff, $stock_category_id);
 
             return response()->json(['success' => '已自動開始計算，請稍等'], 200);
-        } else {
-            // $stockA = $data->stockA;
-            // $stockB = $data->stockB;
-            // $stockA_name = StockName::get_stock_name($stockA);
-            // $stockB_name = StockName::get_stock_name($stockB);
-
-            // list($up, $down) = self::cal_two_stock($startdate, $enddate, $diff, $stockA, $stockB);
-
-            // $sendresult = $stockA_name . "(" . $stockA . ")" . "漲，" . $stockB_name . "(" . $stockB . ")" . $diff . "天後 也跟著漲" . $up . "%    ,     " . $stockA_name . "(" . $stockA . ")" . "跌，" . $stockB_name . "(" . $stockB . ")" . $diff . "天後 也跟著跌" . $down . "%";
-
-            // return response()->json(['success' => $sendresult, 'stockA_datas' => $stockA_datas, 'stockB_datas' => $stockB_datas], 200);
         }
-
-        // return response()->json(['success' => $stock_list], 200);
     }
-    public function cal_two_stock($data)
+    public function cal_stock($data)
     {
-
-        $startdate = $data->startdate;
-        $enddate = $data->enddate;
+        $startdate = $data->startdate; //'2021-01-01';
+        $enddate = $data->enddate; //'2021-12-01';
         $diff = $data->diff;
+
         $stockA = $data->stockA;
         $stockB = $data->stockB;
+        $stockA_name = StockName::get_stock_name($stockA);
+        $stockB_name = StockName::get_stock_name($stockB);
+
+        list($up, $down, $stockA_datas, $stockB_datas) = self::cal_two_stock($startdate, $enddate, $diff, $stockA, $stockB);
+
+        $sendresult = $stockA_name . "(" . $stockA . "黃線)" . "漲，" . $stockB_name . "(" . $stockB . "藍線)" . $diff . "天後 也跟著漲" . $up . "%    ,     " . $stockA_name . "(" . $stockA . "黃線)" . "跌，" . $stockB_name . "(" . $stockB . "藍線)" . $diff . "天後 也跟著跌" . $down . "%";
+
+        return response()->json(['success' => $sendresult, 'stockA_datas' => $stockA_datas, 'stockB_datas' => $stockB_datas], 200);
+    }
+    public function cal_two_stock($startdate, $enddate, $diff, $stockA, $stockB)
+    {
 
         $stockA_datas = StockName::where(['stock_id' => $stockA])->first()->StockData->where('date', '>=', $startdate)->where('date', '<=', $enddate)->values();
         if (StockName::where(['stock_id' => $stockB])->first()->StockData->where('date', $stockA_datas[0]['date'])->count() != 0) {
-            $stockB_datas = StockName::where(['stock_id' => $stockB])->first()->StockData->where('date', '>=', $stockA_datas[0]['date'])->collect()->skip($diff)->take($stockA_datas->count())->values();
+            $stockB_datas = StockName::where(['stock_id' => $stockB])->first()->StockData->where('date', '>=', $startdate)->collect()->skip($diff)->take($stockA_datas->count())->values();
             if ($stockA_datas->count() != 0 && $stockB_datas->count() != 0 && ($stockA_datas->count() == $stockB_datas->count())) {
                 $a = 0;
                 $b = 0;
@@ -132,12 +130,8 @@ class GetStockRepository
                 $up = round($a / ($a + $b), 2) * 100;
                 //A跌B x天後 也跟著跌
                 $down = round($d / ($c + $d), 2) * 100;
-                return response()->json(['success' =>  $up . ' stop ' . $down], 200);
-            } else {
-                return response()->json(['no' => 'no'], 200);
+                return [$up, $down, $stockA_datas, $stockB_datas];
             }
-        } else {
-            return response()->json(['no' => 'no'], 200);
         }
     }
 }
