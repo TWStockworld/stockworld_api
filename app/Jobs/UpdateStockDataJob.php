@@ -80,9 +80,9 @@ class UpdateStockDataJob implements ShouldQueue
                             $spread = doubleval($newstock->values()->pluck(3)->get(0));
 
 
-                            $volume = $newstock->values()->pluck(8)->get(0);
-                            $money = $newstock->values()->pluck(9)->get(0);
-                            $turnover = $newstock->values()->pluck(10)->get(0);
+                            $volume = intval(str_replace(',', '', $newstock->values()->pluck(8)->get(0)));
+                            $money = intval(str_replace(',', '', $newstock->values()->pluck(9)->get(0)));
+                            $turnover = intval(str_replace(',', '', $newstock->values()->pluck(10)->get(0)));
 
                             $day_change = round(($spread / ($close - $spread)) * 100, 2);
                             $stock_data = [
@@ -125,9 +125,9 @@ class UpdateStockDataJob implements ShouldQueue
                             $value = $newstock->values()->pluck(10)->get(0);
                             $spread = doubleval($sign . $value);
 
-                            $volume = $newstock->values()->pluck(2)->get(0);
-                            $money = $newstock->values()->pluck(4)->get(0);
-                            $turnover = $newstock->values()->pluck(3)->get(0);
+                            $volume = intval(str_replace(',', '', $newstock->values()->pluck(2)->get(0)));
+                            $money = intval(str_replace(',', '', $newstock->values()->pluck(4)->get(0)));
+                            $turnover = intval(str_replace(',', '', $newstock->values()->pluck(3)->get(0)));
 
 
                             $day_change = round(($spread / ($close - $spread)) * 100, 2);
