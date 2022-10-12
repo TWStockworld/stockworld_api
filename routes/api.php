@@ -26,6 +26,8 @@ php artisan migrate:rollback
 php artisan route:list 查看可用
 php artisan queue:clear
 sudo supervisorctl restart queue-worker:queue-worker_00
+supervisorctl reread
+supervisorctl update
 
 php artisan schedule:list 查看排程
 php artisan l5-swagger:generate

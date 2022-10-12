@@ -11,6 +11,7 @@ use Illuminate\Queue\SerializesModels;
 use App\Models\StockName;
 use App\Models\StockCalculate;
 use App\Models\TestStock;
+use App\Models\StockData;
 
 class CalculateStockJob implements ShouldQueue
 {
@@ -28,13 +29,22 @@ class CalculateStockJob implements ShouldQueue
     }
     public function handle()
     {
-        $stockAA = StockName::where(['stock_id' => 1101])->get();
+        TestStock::create(['test1' => 'first']);
+        // $stockAA = StockName::where('stock_id', '>=', 1101)->where('stock_id', '<=', 1102)->get();
         $stocks = StockName::all();
         // $stocks = StockName::where(['stock_category_id' => $this->stock_category_id])->get();
         $stock_data_temp = collect();
         $out_stock_list = [];
         $cou = 0;
-        foreach ($stockAA as $stockA) {
+
+        $add_diff_enddate = date("Y-m-d", strtotime($this->enddate . '+ 15 days'));
+
+        $stock_data_temp = StockData::where('date', '>=', $this->startdate)->where('date', '<=', $add_diff_enddate)->get()->groupby('stock_name_id');
+
+
+        $stockA_id = 0;
+        $stockB_id = 0;
+        foreach ($stocks as $stockA) {
             $cou++;
             foreach ($stocks as $stockB) {
                 $stockA_id = $stockA->stock_id;
@@ -54,9 +64,9 @@ class CalculateStockJob implements ShouldQueue
                             array_push($out_stock_list, $result);
                         }
                     }
-                    TestStock::create(['test1' => $cou, 'test2' => $stockA_id, 'test3' => $stockB_id]);
                 }
             }
+            TestStock::create(['test1' => $cou, 'test2' => $stockA_id, 'test3' => $stockB_id]);
         }
         usort($out_stock_list, function ($a, $b) {
             return $a['up'] < $b['up'];
@@ -74,21 +84,11 @@ class CalculateStockJob implements ShouldQueue
 
     public function cal_two_stock($startdate, $enddate, $diff, $stockA, $stockB, $stock_data_temp)
     {
-        if (!$stock_data_temp->has($stockA)) {
-            $add_diff_enddate = date("Y-m-d", strtotime($enddate . '+ 15 days'));
-            $stockA_datas = StockName::where(['stock_id' => $stockA])->first()->StockData->where('date', '>=', $startdate)->where('date', '<=', $add_diff_enddate)->values();
-            $stock_data_temp->put($stockA, $stockA_datas);
-        }
-        if (!$stock_data_temp->has($stockB)) {
-            $add_diff_enddate = date("Y-m-d", strtotime($enddate . '+ 15 days'));
-            $stockB_datas = StockName::where(['stock_id' => $stockB])->first()->StockData->where('date', '>=', $startdate)->where('date', '<=', $add_diff_enddate)->values();
-            $stock_data_temp->put($stockB, $stockB_datas);
-        }
         $stockA_datas = $stock_data_temp->get($stockA)->where('date', '<=', $enddate);
         $stockB_datas = $stock_data_temp->get($stockB);
-        if ($stockA_datas->count() != 0) {
+        if ($stockA_datas != null) {
             if (((strtotime($stockA_datas[0]['date']) - strtotime($startdate)) / (60 * 60 * 24)) < 15) { //15天寬限
-                if ($stockB_datas->count() != 0) {
+                if ($stockB_datas != null) {
                     if (((strtotime($stockB_datas[0]['date']) - strtotime($startdate)) / (60 * 60 * 24)) < 15) { //15天寬限
                         $stockB_datas = $stockB_datas->skip($diff)->take($stockA_datas->count())->values();
                         if ($stockA_datas->count() == $stockB_datas->count()) {
@@ -96,16 +96,17 @@ class CalculateStockJob implements ShouldQueue
                             $b = 0;
                             $c = 0;
                             $d = 0;
-                            $days = $stockA_datas->count();
 
-                            for ($i = 0; $i < $days; $i++) {
-                                if ($stockA_datas[$i]['day_change'] > 0 && $stockB_datas[$i]['day_change'] > 0) {
+                            foreach ($stockA_datas as $key => $v) {
+                                $stockA_day_change = $stockA_datas[$key]['day_change'];
+                                $stockB_day_change = $stockA_datas[$key]['day_change'];
+                                if ($stockA_day_change > 0 &&  $stockB_day_change > 0) {
                                     $a++;
-                                } else if ($stockA_datas[$i]['day_change'] > 0 && $stockB_datas[$i]['day_change'] <= 0) {
+                                } else if ($stockA_day_change > 0 &&  $stockB_day_change <= 0) {
                                     $b++;
-                                } else if ($stockA_datas[$i]['day_change'] <= 0 && $stockB_datas[$i]['day_change'] > 0) {
+                                } else if ($stockA_day_change <= 0 &&  $stockB_day_change > 0) {
                                     $c++;
-                                } else if ($stockA_datas[$i]['day_change'] <= 0 && $stockB_datas[$i]['day_change'] <= 0) {
+                                } else if ($stockA_day_change <= 0 &&  $stockB_day_change <= 0) {
                                     $d++;
                                 }
                             }

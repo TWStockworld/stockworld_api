@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Jobs\UpdateStockDataJob;
 use App\Jobs\UpdateStockDataFindmindJob;
 use App\Jobs\UpdateStockInformationJob;
-
+use App\Models\StockData;
 use App\Models\StockUpdateRecord;
 
 
@@ -29,8 +29,13 @@ class UpdateStockRepository
     }
     public function test()
     {
-        $stocks = StockName::where('type', 3)->get();
-        return response()->json(['success' => $stocks], 200);
+        $data = StockData::where('date', '>=', '2019-01-01')->where('date', '<=', '2022-10-01')->take(1000)->get()->groupby('stock_name_id');
+        $a = $data->get(99999);
+        $c = 0;
+        if ($a != null) {
+            $c = 1;
+        }
+        return response()->json(['success' => $c], 200);
     }
     public function test1()
     {
