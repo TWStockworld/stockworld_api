@@ -12,7 +12,7 @@ use App\Models\StockName;
 use App\Models\StockCalculate;
 use App\Models\TestStock;
 
-class CalculateStock implements ShouldQueue
+class CalculateStockJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     public $tries = 2;
