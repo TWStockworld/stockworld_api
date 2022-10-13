@@ -39,7 +39,7 @@ queue-worker.conf
 
 [program:queue-worker]
 process_name=%(program_name)s_%(process_num)02d
-command=php /var/www/stockworld_api/artisan queue:work --timeout=86400 --tries=2
+command=php /var/www/stockworld_api/artisan queue:work --timeout=864000 --tries=1
 autostart=true
 autorestart=true
 user=root

@@ -29,31 +29,32 @@ class UpdateStockRepository
     }
     public function test()
     {
-        $data = StockData::where('date', '>=', '2019-01-01')->where('date', '<=', '2022-10-01')->take(1000)->get()->groupby('stock_name_id');
-        $a = $data->get(99999);
-        $c = 0;
-        if ($a != null) {
-            $c = 1;
-        }
-        return response()->json(['success' => $c], 200);
-    }
-    public function test1()
-    {
+        $out_stock_col = collect();
 
-        $as = collect([2, 4, 5, 8]);
-        $bs = collect([1, 3, 5, 7]);
-        $out = collect();
-        foreach ($as as $a) {
-            foreach ($bs as $b) {
-                for ($c_diff = 1; $c_diff <= 5; $c_diff++) {
-                    if (intval($a) % 2 != 0) {
-                        break 2;
-                    }
-                    $out->push($a . $b);
-                }
-            }
-        }
-        return response()->json(['success' => $out], 200);
+        self::test1($out_stock_col);
+        $out_stock_col = $out_stock_col->sortByDesc('up')->values();
+        return response()->json(['success' => $out_stock_col[0]], 200);
+    }
+    public function test1($out_stock_col)
+    {
+        $result = [
+            'group_id' => 1, 'stockA_name_id' => 1, 'stockB_name_id' => 1, 'diff' => 1,
+            'up' => 30, 'down' => 30, 'startdate' => 1, 'enddate' => 1,
+            'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')
+        ];
+        $out_stock_col->push($result);
+        $result = [
+            'group_id' => 1, 'stockA_name_id' => 1, 'stockB_name_id' => 1, 'diff' => 1,
+            'up' => 40, 'down' => 20, 'startdate' => 1, 'enddate' => 1,
+            'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')
+        ];
+        $out_stock_col->push($result);
+        $result = [
+            'group_id' => 1, 'stockA_name_id' => 1, 'stockB_name_id' => 1, 'diff' => 1,
+            'up' => 50, 'down' => 40, 'startdate' => 1, 'enddate' => 1,
+            'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')
+        ];
+        $out_stock_col->push($result);
     }
 
 

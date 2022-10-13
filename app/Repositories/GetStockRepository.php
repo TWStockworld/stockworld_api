@@ -113,16 +113,16 @@ class GetStockRepository
                 $b = 0;
                 $c = 0;
                 $d = 0;
-                $days = $stockA_datas->count();
-
-                for ($i = 0; $i < $days; $i++) {
-                    if ($stockA_datas[$i]['day_change'] > 0 && $stockB_datas[$i]['day_change'] > 0) {
+                foreach ($stockA_datas as $key => $v) {
+                    $stockA_day_change = $stockA_datas[$key]['day_change'];
+                    $stockB_day_change = $stockB_datas[$key]['day_change'];
+                    if ($stockA_day_change > 0 &&  $stockB_day_change > 0) {
                         $a++;
-                    } else if ($stockA_datas[$i]['day_change'] > 0 && $stockB_datas[$i]['day_change'] <= 0) {
+                    } else if ($stockA_day_change > 0 &&  $stockB_day_change <= 0) {
                         $b++;
-                    } else if ($stockA_datas[$i]['day_change'] <= 0 && $stockB_datas[$i]['day_change'] > 0) {
+                    } else if ($stockA_day_change <= 0 &&  $stockB_day_change > 0) {
                         $c++;
-                    } else if ($stockA_datas[$i]['day_change'] <= 0 && $stockB_datas[$i]['day_change'] <= 0) {
+                    } else if ($stockA_day_change <= 0 &&  $stockB_day_change <= 0) {
                         $d++;
                     }
                 }
