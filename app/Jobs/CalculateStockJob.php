@@ -30,11 +30,12 @@ class CalculateStockJob implements ShouldQueue
     public function handle()
     {
         TestStock::create(['test1' => 'first']);
-        $stockAA = StockName::where('stock_id', 1101)->get();
+        // $stockAA = StockName::where('stock_id', 1101)->get();
         $stocks = StockName::all();
         // $stockaa = StockName::where(['stock_category_id' => $this->stock_category_id])->get();
         $stock_data_temp = collect();
-        $out_stock_list = collect();
+        $out_stock_list_up = collect();
+        $out_stock_list_down = collect();
         $cou = 0;
 
         $add_diff_enddate = date("Y-m-d", strtotime($this->enddate . '+ 15 days'));
@@ -47,17 +48,25 @@ class CalculateStockJob implements ShouldQueue
         $stockB_id = 0;
         $stockB_name_id = 0;
 
-        foreach ($stockAA as $stockA) {
+        foreach ($stocks as $stockA) {
             $stockA_id = $stockA->stock_id;
             $stockA_name_id = StockName::get_stock_name_id($stockA_id);
             $cou++;
+
+            //整理
+            if (count($out_stock_list_up) > 30) {
+                $out_stock_list_up = $out_stock_list_up->sortByDesc('up')->values()->take(30);
+            }
+            if (count($out_stock_list_down) > 30) {
+                $out_stock_list_down = $out_stock_list_down->sortByDesc('down')->values()->take(30);
+            }
             foreach ($stocks as $stockB) {
                 $stockB_id = $stockB->stock_id;
                 $stockB_name_id = StockName::get_stock_name_id($stockB_id);
 
                 if ($stockA_id != $stockB_id) {
                     $breakkey = 0;
-                    $breakkey = self::cal_two_stock($this->startdate, $this->enddate, $this->diff, $stockA_name_id, $stockB_name_id, $stock_data_temp, $out_stock_list);
+                    $breakkey = self::cal_two_stock($this->startdate, $this->enddate, $this->diff, $stockA_name_id, $stockB_name_id, $stock_data_temp, $out_stock_list_up, $out_stock_list_down);
                     if ($breakkey == 401) {
                         break 1;
                     }
@@ -66,28 +75,15 @@ class CalculateStockJob implements ShouldQueue
             TestStock::create(['test1' => $cou, 'test2' => $stockA_id]);
         }
 
-        if (count($out_stock_list) > 30) {
-            $out_stock_list = $out_stock_list->sortByDesc('up')->values();
-            for ($count = 0; $count < 30; $count++) {
-                StockCalculate::insert($out_stock_list[$count]);
-            }
-            $out_stock_list = $out_stock_list->sortByDesc('down')->values();;
-            for ($count = 0; $count < 30; $count++) {
-                StockCalculate::insert($out_stock_list[$count]);
-            }
-        } else {
-            $out_stock_list = $out_stock_list->sortByDesc('up')->values();
 
-            StockCalculate::insert($out_stock_list->toArray());
+        $out_stock_list_up = $out_stock_list_up->sortByDesc('up')->values();
+        StockCalculate::insert($out_stock_list_up->toArray());
 
-            $out_stock_list = $out_stock_list->sortByDesc('down')->values();;
-
-            StockCalculate::insert($out_stock_list->toArray());
-        }
-        $out_stock_list = null;
+        $out_stock_list_down = $out_stock_list_down->sortByDesc('down')->values();;
+        StockCalculate::insert($out_stock_list_down->toArray());
     }
 
-    public function cal_two_stock($startdate, $enddate, $diff, $stockA_name_id, $stockB_name_id, $stock_data_temp, $out_stock_list)
+    public function cal_two_stock($startdate, $enddate, $diff, $stockA_name_id, $stockB_name_id, $stock_data_temp, $out_stock_list_up, $out_stock_list_down)
     {
         $stockA_datas = $stock_data_temp->get($stockA_name_id);
         $stockB_datas = $stock_data_temp->get($stockB_name_id);
@@ -129,13 +125,18 @@ class CalculateStockJob implements ShouldQueue
                                     if ($c_diff == 0) {
                                         $zero_diff_up = $up;
                                         $zero_diff_down = $down;
-                                    } else if ($up > $zero_diff_up + 5 || $down > $zero_diff_down + 5) {
+                                    } else {
                                         $result = [
                                             'group_id' => 1, 'stockA_name_id' => $stockA_name_id, 'stockB_name_id' => $stockB_name_id, 'diff' => $c_diff,
                                             'up' => $up, 'down' => $down, 'startdate' => $startdate, 'enddate' => $enddate,
                                             'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')
                                         ];
-                                        $out_stock_list->push($result);
+                                        if ($up > $zero_diff_up + 5) {
+                                            $out_stock_list_up->push($result);
+                                        }
+                                        if ($down > $zero_diff_down + 5) {
+                                            $out_stock_list_down->push($result);
+                                        }
                                     }
                                 } else {
                                     return 0;
