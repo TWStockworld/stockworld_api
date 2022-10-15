@@ -25,7 +25,7 @@ php artisan migrate:rollback
 
 php artisan route:list 查看可用
 php artisan queue:clear
-sudo supervisorctl restart queue-worker:queue-worker_00
+sudo supervisorctl restart all
 supervisorctl reread
 supervisorctl update
 

@@ -29,32 +29,7 @@ class UpdateStockRepository
     }
     public function test()
     {
-        $out_stock_col = collect();
-
-        self::test1($out_stock_col);
-        $out_stock_col = $out_stock_col->sortByDesc('up')->values();
-        return response()->json(['success' => $out_stock_col[0]], 200);
-    }
-    public function test1($out_stock_col)
-    {
-        $result = [
-            'group_id' => 1, 'stockA_name_id' => 1, 'stockB_name_id' => 1, 'diff' => 1,
-            'up' => 30, 'down' => 30, 'startdate' => 1, 'enddate' => 1,
-            'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')
-        ];
-        $out_stock_col->push($result);
-        $result = [
-            'group_id' => 1, 'stockA_name_id' => 1, 'stockB_name_id' => 1, 'diff' => 1,
-            'up' => 40, 'down' => 20, 'startdate' => 1, 'enddate' => 1,
-            'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')
-        ];
-        $out_stock_col->push($result);
-        $result = [
-            'group_id' => 1, 'stockA_name_id' => 1, 'stockB_name_id' => 1, 'diff' => 1,
-            'up' => 50, 'down' => 40, 'startdate' => 1, 'enddate' => 1,
-            'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')
-        ];
-        $out_stock_col->push($result);
+        return response()->json(['success' => 'c'], 200);
     }
 
 
