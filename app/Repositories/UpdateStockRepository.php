@@ -27,19 +27,6 @@ class UpdateStockRepository
         $this->stockName = $stockName;
         $this->stockCategory = $stockCategory;
     }
-    public function test()
-    {
-        $out_stock_list_up = collect();
-        $out_stock_list_up->put(1, ['up' => 10]);
-        $out_stock_list_up->put(2, ['up' => 20]);
-        $out_stock_list_up->put(3, ['up' => 5]);
-
-        $out_stock_list = $out_stock_list_up->sortByDesc('up')->values()->take(2)->values();
-
-        return response()->json(['success' => $out_stock_list], 200);
-    }
-
-
     public function update_stock_information()
     {
         UpdateStockInformationJob::dispatch();

@@ -3,7 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\Controller;
-
+use App\Http\Controllers\TestController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 /*
@@ -58,7 +58,6 @@ Route::prefix('auth')->group(function () {
 Route::prefix('stock')->group(function () {
     Route::get('sendmail', [Controller::class, 'sendmail']);
 
-    Route::get('test', [StockController::class, 'test']);
     Route::get('update_stock_information', [StockController::class, 'update_stock_information']);
     Route::get('update_stock_data_findmind', [StockController::class, 'update_stock_data_findmind']);
     Route::post('update_stock_data', [StockController::class, 'update_stock_data']);
@@ -80,6 +79,9 @@ Route::middleware('auth:api')->group(function () {
     Route::get('user', [AuthController::class, 'userInfo']);
 });
 
+Route::prefix('test')->group(function () {
+    Route::get('test1', [TestController::class, 'test1']);
+});
 
 /*
 興櫃公司基本資料

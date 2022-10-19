@@ -16,12 +16,6 @@ class StockController extends Controller
         $this->UpdateStockRepository = $UpdateStockRepository;
         $this->GetStockRepository = $GetStockRepository;
     }
-
-    public function test()
-    {
-        return $this->UpdateStockRepository->test();
-    }
-
     public function update_stock_information()
     {
         return $this->UpdateStockRepository->update_stock_information();
