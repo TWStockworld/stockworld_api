@@ -47,12 +47,10 @@ class CalculateStockJob implements ShouldQueue
         $stockA_name_id = 0;
         $stockB_id = 0;
         $stockB_name_id = 0;
+        $stockA_datas = null;
+        $stockB_datas = null;
 
         foreach ($stocks as $stockA) {
-            $stockA_id = $stockA->stock_id;
-            $stockA_name_id = StockName::get_stock_name_id($stockA_id);
-            $cou++;
-
             //整理
             if (count($out_stock_list_up) > 30) {
                 $out_stock_list_up = $out_stock_list_up->sortByDesc('up')->values()->take(30);
@@ -60,15 +58,36 @@ class CalculateStockJob implements ShouldQueue
             if (count($out_stock_list_down) > 30) {
                 $out_stock_list_down = $out_stock_list_down->sortByDesc('down')->values()->take(30);
             }
-            foreach ($stocks as $stockB) {
-                $stockB_id = $stockB->stock_id;
-                $stockB_name_id = StockName::get_stock_name_id($stockB_id);
 
-                if ($stockA_id != $stockB_id) {
-                    $breakkey = 0;
-                    $breakkey = self::cal_two_stock($this->startdate, $this->enddate, $this->diff, $stockA_name_id, $stockB_name_id, $stock_data_temp, $out_stock_list_up, $out_stock_list_down);
-                    if ($breakkey == 401) {
-                        break 1;
+            $stockA_id = $stockA->stock_id;
+            $stockA_name_id = StockName::get_stock_name_id($stockA_id);
+            $stockA_datas = $stock_data_temp->get($stockA_name_id);
+
+            $cou++;
+            if ($stockA_datas != null) {
+                $stockA_datas = $stockA_datas->where('date', '<=', $this->enddate);
+                if ($stockA_datas->count() != 0) {
+                    if (((strtotime($stockA_datas[0]['date']) - strtotime($this->startdate)) / (60 * 60 * 24)) < 15) { //15天寬限
+
+                        foreach ($stocks as $stockB) {
+                            $stockB_id = $stockB->stock_id;
+                            $stockB_name_id = StockName::get_stock_name_id($stockB_id);
+
+                            if ($stockA_id != $stockB_id) {
+
+                                self::cal_two_stock(
+                                    $this->startdate,
+                                    $this->enddate,
+                                    $this->diff,
+                                    $stockA_name_id,
+                                    $stockB_name_id,
+                                    $stock_data_temp,
+                                    $out_stock_list_up,
+                                    $out_stock_list_down,
+                                    $stockA_datas
+                                );
+                            }
+                        }
                     }
                 }
             }
@@ -76,82 +95,66 @@ class CalculateStockJob implements ShouldQueue
         }
 
 
-        $out_stock_list_up = $out_stock_list_up->sortByDesc('up')->values();
+        $out_stock_list_up = $out_stock_list_up->sortByDesc('up')->values()->take(30);
         StockCalculate::insert($out_stock_list_up->toArray());
 
-        $out_stock_list_down = $out_stock_list_down->sortByDesc('down')->values();;
+        $out_stock_list_down = $out_stock_list_down->sortByDesc('down')->values()->take(30);
         StockCalculate::insert($out_stock_list_down->toArray());
     }
 
-    public function cal_two_stock($startdate, $enddate, $diff, $stockA_name_id, $stockB_name_id, $stock_data_temp, $out_stock_list_up, $out_stock_list_down)
+    public function cal_two_stock($startdate, $enddate, $diff, $stockA_name_id, $stockB_name_id, $stock_data_temp, $out_stock_list_up, $out_stock_list_down, $stockA_datas)
     {
-        $stockA_datas = $stock_data_temp->get($stockA_name_id);
         $stockB_datas = $stock_data_temp->get($stockB_name_id);
-        if ($stockA_datas != null) {
-            $stockA_datas = $stockA_datas->where('date', '<=', $enddate);
-            if ($stockA_datas->count() != 0) {
-                if (((strtotime($stockA_datas[0]['date']) - strtotime($startdate)) / (60 * 60 * 24)) < 15) { //15天寬限
-                    if ($stockB_datas != null && $stockB_datas->count() != 0) {
-                        if (((strtotime($stockB_datas[0]['date']) - strtotime($startdate)) / (60 * 60 * 24)) < 15) { //15天寬限
-                            $zero_diff_up = 0;
-                            $zero_diff_down = 0;
-                            for ($c_diff = 0; $c_diff <= $diff; $c_diff++) {
-                                $diff_stockB_datas = $stockB_datas->skip($c_diff)->take($stockA_datas->count())->values();
+        if ($stockB_datas != null && $stockB_datas->count() != 0) {
+            if (((strtotime($stockB_datas[0]['date']) - strtotime($startdate)) / (60 * 60 * 24)) < 15) { //15天寬限
+                $zero_diff_up = 0;
+                $zero_diff_down = 0;
+                for ($c_diff = 0; $c_diff <= $diff; $c_diff++) {
+                    $diff_stockB_datas = $stockB_datas->skip($c_diff)->take($stockA_datas->count())->values();
 
-                                if ($stockA_datas->count() == $diff_stockB_datas->count()) {
+                    if ($stockA_datas->count() == $diff_stockB_datas->count()) {
 
-                                    $a = 0;
-                                    $b = 0;
-                                    $c = 0;
-                                    $d = 0;
+                        $a = 0;
+                        $b = 0;
+                        $c = 0;
+                        $d = 0;
 
-                                    foreach ($stockA_datas as $key => $v) {
-                                        $stockA_day_change = $stockA_datas[$key]['day_change'];
-                                        $stockB_day_change = $diff_stockB_datas[$key]['day_change'];
-                                        if ($stockA_day_change > 0 &&  $stockB_day_change > 0) {
-                                            $a++;
-                                        } else if ($stockA_day_change > 0 &&  $stockB_day_change <= 0) {
-                                            $b++;
-                                        } else if ($stockA_day_change <= 0 &&  $stockB_day_change > 0) {
-                                            $c++;
-                                        } else if ($stockA_day_change <= 0 &&  $stockB_day_change <= 0) {
-                                            $d++;
-                                        }
-                                    }
-                                    //A漲 B x天後 也跟著漲
-                                    $up = round($a / ($a + $b), 2) * 100;
-                                    //A跌B x天後 也跟著跌
-                                    $down = round($d / ($c + $d), 2) * 100;
-                                    if ($c_diff == 0) {
-                                        $zero_diff_up = $up;
-                                        $zero_diff_down = $down;
-                                    } else {
-                                        $result = [
-                                            'group_id' => 1, 'stockA_name_id' => $stockA_name_id, 'stockB_name_id' => $stockB_name_id, 'diff' => $c_diff,
-                                            'up' => $up, 'down' => $down, 'startdate' => $startdate, 'enddate' => $enddate,
-                                            'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')
-                                        ];
-                                        if ($up > $zero_diff_up + 5) {
-                                            $out_stock_list_up->push($result);
-                                        }
-                                        if ($down > $zero_diff_down + 5) {
-                                            $out_stock_list_down->push($result);
-                                        }
-                                    }
-                                } else {
-                                    return 0;
-                                }
+                        foreach ($stockA_datas as $key => $v) {
+                            $stockA_day_change = $stockA_datas[$key]['day_change'];
+                            $stockB_day_change = $diff_stockB_datas[$key]['day_change'];
+                            if ($stockA_day_change > 0 &&  $stockB_day_change > 0) {
+                                $a++;
+                            } else if ($stockA_day_change > 0 &&  $stockB_day_change <= 0) {
+                                $b++;
+                            } else if ($stockA_day_change <= 0 &&  $stockB_day_change > 0) {
+                                $c++;
+                            } else if ($stockA_day_change <= 0 &&  $stockB_day_change <= 0) {
+                                $d++;
+                            }
+                        }
+                        //A漲 B x天後 也跟著漲
+                        $up = round($a / ($a + $b), 2) * 100;
+                        //A跌B x天後 也跟著跌
+                        $down = round($d / ($c + $d), 2) * 100;
+                        if ($c_diff == 0) {
+                            $zero_diff_up = $up;
+                            $zero_diff_down = $down;
+                        } else {
+                            $result = [
+                                'group_id' => 1, 'stockA_name_id' => $stockA_name_id, 'stockB_name_id' => $stockB_name_id, 'diff' => $c_diff,
+                                'up' => $up, 'down' => $down, 'startdate' => $startdate, 'enddate' => $enddate,
+                                'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')
+                            ];
+                            if ($up > $zero_diff_up + 5) {
+                                $out_stock_list_up->push($result);
+                            }
+                            if ($down > $zero_diff_down + 5) {
+                                $out_stock_list_down->push($result);
                             }
                         }
                     }
-                } else {
-                    return 401;
                 }
-            } else {
-                return 401;
             }
-        } else {
-            return 401;
         }
     }
 }
