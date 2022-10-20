@@ -70,7 +70,7 @@ Route::prefix('stock')->group(function () {
     Route::post('get_stock_special_kind', [StockController::class, 'get_stock_special_kind']);
     Route::post('get_stock_special_kind_detail', [StockController::class, 'get_stock_special_kind_detail']);
 
-    Route::post('cal_stock_category', [StockController::class, 'cal_stock_category']);
+    Route::post('cal_all_stock_probability', [StockController::class, 'cal_all_stock_probability']);
     Route::post('cal_stock', [StockController::class, 'cal_stock']);
 });
 

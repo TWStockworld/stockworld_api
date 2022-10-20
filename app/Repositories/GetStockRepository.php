@@ -72,7 +72,7 @@ class GetStockRepository
         return response()->json(['success' => $stocks], 200);
     }
 
-    public function cal_stock_category($data)
+    public function cal_all_stock_probability($data)
     {
         $startdate = $data->startdate; //'2021-01-01';
         $enddate = $data->enddate; //'2021-12-01';

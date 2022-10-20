@@ -57,9 +57,9 @@ class StockController extends Controller
     {
         return $this->GetStockRepository->get_stock_special_kind_detail($request);
     }
-    public function cal_stock_category(Request $request)
+    public function cal_all_stock_probability(Request $request)
     {
-        return $this->GetStockRepository->cal_stock_category($request);
+        return $this->GetStockRepository->cal_all_stock_probability($request);
     }
     public function cal_stock(Request $request)
     {
