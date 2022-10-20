@@ -4,17 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Repositories\UpdateStockRepository;
 use App\Repositories\GetStockRepository;
+use App\Repositories\CalStockRepository;
 use Illuminate\Http\Request;
 
 class StockController extends Controller
 {
     protected $UpdateStockRepository;
     protected $GetStockRepository;
-
-    public function __construct(UpdateStockRepository $UpdateStockRepository, GetStockRepository $GetStockRepository)
+    protected $CalStockRepository;
+    public function __construct(UpdateStockRepository $UpdateStockRepository, GetStockRepository $GetStockRepository, CalStockRepository $CalStockRepository)
     {
         $this->UpdateStockRepository = $UpdateStockRepository;
         $this->GetStockRepository = $GetStockRepository;
+        $this->CalStockRepository = $CalStockRepository;
     }
     public function update_stock_information()
     {
@@ -59,11 +61,11 @@ class StockController extends Controller
     }
     public function cal_all_stock_probability(Request $request)
     {
-        return $this->GetStockRepository->cal_all_stock_probability($request);
+        return $this->CalStockRepository->cal_all_stock_probability($request);
     }
     public function cal_stock(Request $request)
     {
-        return $this->GetStockRepository->cal_stock($request);
+        return $this->CalStockRepository->cal_stock($request);
     }
     /**
      * Display a listing of the resource.
