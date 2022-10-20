@@ -38,10 +38,7 @@ class CalculateStockJob implements ShouldQueue
         // $stockaa = StockName::where(['stock_category_id' => $this->stock_category_id])->get();
         $stock_data_temp = collect();
         $out_stock_list_up = collect();
-        $out_stock_list_up_temp = collect();
-
         $out_stock_list_down = collect();
-        $out_stock_list_down_temp = collect();
 
         $cou = 0;
 
@@ -58,8 +55,8 @@ class CalculateStockJob implements ShouldQueue
         $stockB_datas = null;
 
         foreach ($stocks as $stockA) {
-            $out_stock_list_up_temp = collect();
-            $out_stock_list_down_temp = collect();
+            $out_stock_list_up = collect();
+            $out_stock_list_down = collect();
 
             $stockA_id = $stockA->stock_id;
             $stockA_name_id = StockName::get_stock_name_id($stockA_id);
@@ -84,8 +81,8 @@ class CalculateStockJob implements ShouldQueue
                                     $stockA_name_id,
                                     $stockB_name_id,
                                     $stock_data_temp,
-                                    $out_stock_list_up_temp,
-                                    $out_stock_list_down_temp,
+                                    $out_stock_list_up,
+                                    $out_stock_list_down,
                                     $stockA_datas,
                                     $StockCalculateGroup
                                 );
@@ -96,21 +93,15 @@ class CalculateStockJob implements ShouldQueue
             }
             TestStock::create(['test1' => $cou, 'test2' => $stockA_id]);
 
-            $out_stock_list_up_temp = $out_stock_list_up_temp->sortByDesc('up')->values()->take(10);
-            $out_stock_list_up->merge($out_stock_list_up_temp);
+            $out_stock_list_up = $out_stock_list_up->sortByDesc('up')->values()->take(10);
+            StockCalculate::insert($out_stock_list_up->toArray());
 
-            $out_stock_list_down_temp = $out_stock_list_down_temp->sortByDesc('down')->values()->take(10);
-            $out_stock_list_down->merge($out_stock_list_down_temp);
+            $out_stock_list_down = $out_stock_list_down->sortByDesc('down')->values()->take(10);
+            StockCalculate::insert($out_stock_list_down->toArray());
         }
-
-
-
-        StockCalculate::insert($out_stock_list_up->toArray());
-
-        StockCalculate::insert($out_stock_list_down->toArray());
     }
 
-    public function cal_two_stock($startdate, $enddate, $diff, $stockA_name_id, $stockB_name_id, $stock_data_temp, $out_stock_list_up_temp, $out_stock_list_down_temp, $stockA_datas, $StockCalculateGroup)
+    public function cal_two_stock($startdate, $enddate, $diff, $stockA_name_id, $stockB_name_id, $stock_data_temp, $out_stock_list_up, $out_stock_list_down, $stockA_datas, $StockCalculateGroup)
     {
         $stockB_datas = $stock_data_temp->get($stockB_name_id);
         if ($stockB_datas != null && $stockB_datas->count() != 0) {
@@ -159,7 +150,7 @@ class CalculateStockJob implements ShouldQueue
                                     'up' => $up, 'down' => $down, 'sort' => 1,
                                     'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')
                                 ];
-                                $out_stock_list_up_temp->push($result);
+                                $out_stock_list_up->push($result);
                             }
                             if ($down > $zero_diff_down + 5) {
                                 $result = [
@@ -167,7 +158,7 @@ class CalculateStockJob implements ShouldQueue
                                     'up' => $up, 'down' => $down, 'sort' => 2,
                                     'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')
                                 ];
-                                $out_stock_list_down_temp->push($result);
+                                $out_stock_list_down->push($result);
                             }
                         }
                     }
