@@ -12,6 +12,7 @@ use App\Models\StockName;
 use App\Models\StockCalculate;
 use App\Models\TestStock;
 use App\Models\StockData;
+use App\Models\StockCalculateGroup;
 
 class CalculateStockJob implements ShouldQueue
 {
@@ -29,13 +30,19 @@ class CalculateStockJob implements ShouldQueue
     }
     public function handle()
     {
+        $StockCalculateGroup = StockCalculateGroup::create(['startdate' => $this->startdate, 'enddate' => $this->enddate]);
+
         TestStock::create(['test1' => 'first']);
         // $stockAA = StockName::where('stock_id', 1101)->get();
         $stocks = StockName::all();
         // $stockaa = StockName::where(['stock_category_id' => $this->stock_category_id])->get();
         $stock_data_temp = collect();
         $out_stock_list_up = collect();
+        $out_stock_list_up_temp = collect();
+
         $out_stock_list_down = collect();
+        $out_stock_list_down_temp = collect();
+
         $cou = 0;
 
         $add_diff_enddate = date("Y-m-d", strtotime($this->enddate . '+ 15 days'));
@@ -51,13 +58,8 @@ class CalculateStockJob implements ShouldQueue
         $stockB_datas = null;
 
         foreach ($stocks as $stockA) {
-            //整理
-            if (count($out_stock_list_up) > 30) {
-                $out_stock_list_up = $out_stock_list_up->sortByDesc('up')->values()->take(30);
-            }
-            if (count($out_stock_list_down) > 30) {
-                $out_stock_list_down = $out_stock_list_down->sortByDesc('down')->values()->take(30);
-            }
+            $out_stock_list_up_temp = collect();
+            $out_stock_list_down_temp = collect();
 
             $stockA_id = $stockA->stock_id;
             $stockA_name_id = StockName::get_stock_name_id($stockA_id);
@@ -82,9 +84,10 @@ class CalculateStockJob implements ShouldQueue
                                     $stockA_name_id,
                                     $stockB_name_id,
                                     $stock_data_temp,
-                                    $out_stock_list_up,
-                                    $out_stock_list_down,
-                                    $stockA_datas
+                                    $out_stock_list_up_temp,
+                                    $out_stock_list_down_temp,
+                                    $stockA_datas,
+                                    $StockCalculateGroup
                                 );
                             }
                         }
@@ -92,17 +95,22 @@ class CalculateStockJob implements ShouldQueue
                 }
             }
             TestStock::create(['test1' => $cou, 'test2' => $stockA_id]);
+
+            $out_stock_list_up_temp = $out_stock_list_up_temp->sortByDesc('up')->values()->take(10);
+            $out_stock_list_up->merge($out_stock_list_up_temp);
+
+            $out_stock_list_down_temp = $out_stock_list_down_temp->sortByDesc('down')->values()->take(10);
+            $out_stock_list_down->merge($out_stock_list_down_temp);
         }
 
 
-        $out_stock_list_up = $out_stock_list_up->sortByDesc('up')->values()->take(30);
+
         StockCalculate::insert($out_stock_list_up->toArray());
 
-        $out_stock_list_down = $out_stock_list_down->sortByDesc('down')->values()->take(30);
         StockCalculate::insert($out_stock_list_down->toArray());
     }
 
-    public function cal_two_stock($startdate, $enddate, $diff, $stockA_name_id, $stockB_name_id, $stock_data_temp, $out_stock_list_up, $out_stock_list_down, $stockA_datas)
+    public function cal_two_stock($startdate, $enddate, $diff, $stockA_name_id, $stockB_name_id, $stock_data_temp, $out_stock_list_up_temp, $out_stock_list_down_temp, $stockA_datas, $StockCalculateGroup)
     {
         $stockB_datas = $stock_data_temp->get($stockB_name_id);
         if ($stockB_datas != null && $stockB_datas->count() != 0) {
@@ -111,7 +119,11 @@ class CalculateStockJob implements ShouldQueue
                 $zero_diff_down = 0;
                 for ($c_diff = 0; $c_diff <= $diff; $c_diff++) {
                     $diff_stockB_datas = $stockB_datas->skip($c_diff)->take($stockA_datas->count())->values();
-
+                    if (
+                        ((strtotime($enddate) - strtotime($diff_stockB_datas->last()['date'])) / (60 * 60 * 24)) > 15
+                    ) {
+                        return;
+                    }
                     if ($stockA_datas->count() == $diff_stockB_datas->count()) {
 
                         $a = 0;
@@ -140,16 +152,22 @@ class CalculateStockJob implements ShouldQueue
                             $zero_diff_up = $up;
                             $zero_diff_down = $down;
                         } else {
-                            $result = [
-                                'group_id' => 1, 'stockA_name_id' => $stockA_name_id, 'stockB_name_id' => $stockB_name_id, 'diff' => $c_diff,
-                                'up' => $up, 'down' => $down, 'startdate' => $startdate, 'enddate' => $enddate,
-                                'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')
-                            ];
+
                             if ($up > $zero_diff_up + 5) {
-                                $out_stock_list_up->push($result);
+                                $result = [
+                                    'group_id' => $StockCalculateGroup->id, 'stockA_name_id' => $stockA_name_id, 'stockB_name_id' => $stockB_name_id, 'diff' => $c_diff,
+                                    'up' => $up, 'down' => $down, 'sort' => 1,
+                                    'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')
+                                ];
+                                $out_stock_list_up_temp->push($result);
                             }
                             if ($down > $zero_diff_down + 5) {
-                                $out_stock_list_down->push($result);
+                                $result = [
+                                    'group_id' => $StockCalculateGroup->id, 'stockA_name_id' => $stockA_name_id, 'stockB_name_id' => $stockB_name_id, 'diff' => $c_diff,
+                                    'up' => $up, 'down' => $down, 'sort' => 2,
+                                    'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')
+                                ];
+                                $out_stock_list_down_temp->push($result);
                             }
                         }
                     }

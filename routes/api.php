@@ -81,6 +81,9 @@ Route::middleware('auth:api')->group(function () {
 
 Route::prefix('test')->group(function () {
     Route::get('test1', [TestController::class, 'test1']);
+    Route::get('test2', [TestController::class, 'test2']);
+    Route::get('test3', [TestController::class, 'test3']);
+    Route::get('test4', [TestController::class, 'test4']);
 });
 
 /*

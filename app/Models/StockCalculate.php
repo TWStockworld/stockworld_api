@@ -18,4 +18,8 @@ class StockCalculate extends Model
     {
         return $this->belongsTo(StockName::class, 'stockB_name_id');
     }
+    public function StockCalculateGroup()
+    {
+        return $this->belongsTo(StockCalculateGroup::class);
+    }
 }
