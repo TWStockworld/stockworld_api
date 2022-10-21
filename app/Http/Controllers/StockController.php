@@ -18,6 +18,7 @@ class StockController extends Controller
         $this->GetStockRepository = $GetStockRepository;
         $this->CalStockRepository = $CalStockRepository;
     }
+    //update
     public function update_stock_information()
     {
         return $this->UpdateStockRepository->update_stock_information();
@@ -31,6 +32,8 @@ class StockController extends Controller
         return $this->UpdateStockRepository->update_stock_data($request);
     }
 
+
+    //get basis
     public function get_stock_category()
     {
         return $this->GetStockRepository->get_stock_category();
@@ -47,6 +50,19 @@ class StockController extends Controller
     {
         return $this->GetStockRepository->get_stock($request);
     }
+
+    //get cal
+    public function get_all_stock_probability()
+    {
+        return $this->GetStockRepository->get_all_stock_probability();
+    }
+    public function get_stock_probability(Request $request)
+    {
+        return $this->GetStockRepository->get_stock_probability($request);
+    }
+
+
+    //get bulletin
     public function get_bulletin()
     {
         return $this->GetStockRepository->get_bulletin();
@@ -59,6 +75,9 @@ class StockController extends Controller
     {
         return $this->GetStockRepository->get_stock_special_kind_detail($request);
     }
+
+
+    //cal
     public function cal_all_stock_probability(Request $request)
     {
         return $this->CalStockRepository->cal_all_stock_probability($request);

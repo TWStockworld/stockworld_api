@@ -23,7 +23,7 @@ class StockName extends Model
     {
         return $this->hasMany(StockSpecialKindDetail::class);
     }
-    public function StockCalculatStockA()
+    public function StockCalculateStockA()
     {
         return $this->hasMany(StockCalculate::class, 'stockA_name_id');
     }
@@ -31,15 +31,27 @@ class StockName extends Model
     {
         return $this->hasMany(StockCalculate::class, 'stockB_name_id');
     }
-    public static function get_stock_name_id($name)
+    public static function get_stock_name_id($stock_id)
     {
-        $result = StockName::where('stock_id', $name)->first()->id;
+        $result = StockName::where('stock_id', $stock_id)->first()->id;
 
         return $result;
     }
     public static function get_stock_name($stock_id)
     {
         $result = StockName::where('stock_id', $stock_id)->first()->stock_name;
+
+        return $result;
+    }
+    public static function get_stock_name_useid($id)
+    {
+        $result = StockName::find($id)->stock_name;
+
+        return $result;
+    }
+    public static function get_stock_id($id)
+    {
+        $result = StockName::find($id)->stock_id;
 
         return $result;
     }

@@ -58,18 +58,27 @@ Route::prefix('auth')->group(function () {
 Route::prefix('stock')->group(function () {
     Route::get('sendmail', [Controller::class, 'sendmail']);
 
+    //update
     Route::get('update_stock_information', [StockController::class, 'update_stock_information']);
     Route::get('update_stock_data_findmind', [StockController::class, 'update_stock_data_findmind']);
     Route::post('update_stock_data', [StockController::class, 'update_stock_data']);
 
+    //get basis
     Route::get('get_stock_category', [StockController::class, 'get_stock_category']);
     Route::post('get_stock_name', [StockController::class, 'get_stock_name']);
     Route::get('get_stock_count', [StockController::class, 'get_stock_count']);
     Route::post('get_stock', [StockController::class, 'get_stock']);
+
+    //get cal
+    Route::get('get_all_stock_probability', [StockController::class, 'get_all_stock_probability']);
+    Route::post('get_stock_probability', [StockController::class, 'get_stock_probability']);
+
+    //get bulletin
     Route::get('get_bulletin', [StockController::class, 'get_bulletin']);
     Route::post('get_stock_special_kind', [StockController::class, 'get_stock_special_kind']);
     Route::post('get_stock_special_kind_detail', [StockController::class, 'get_stock_special_kind_detail']);
 
+    //cal
     Route::post('cal_all_stock_probability', [StockController::class, 'cal_all_stock_probability']);
     Route::post('cal_stock', [StockController::class, 'cal_stock']);
 });

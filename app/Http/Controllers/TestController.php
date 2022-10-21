@@ -30,11 +30,17 @@ class TestController extends Controller
         $aa->push(['up' => 1]);
         $aa->push(['up' => 2]);
 
-        return response()->json(['success' => $aa->last()['up']], 200);
+        $aa = $aa->map(function ($item) {
+            $item['sort'] = 1;
+            return $item;
+        });
+        return response()->json(['success' => $aa], 200);
     }
     public function test3()
     {
-        return response()->json(['success' => ''], 200);
+        $bb = collect([1, 2, 3, 4, 5, 6, 7]);
+        $aa = $bb->take(3);
+        return response()->json(['success' =>  $aa . '22' . $bb], 200);
     }
     public function test4()
     {
