@@ -42,13 +42,13 @@ class StockController extends Controller
     {
         return $this->GetStockRepository->get_stock_name($request);
     }
-    public function get_stock_count()
-    {
-        return $this->GetStockRepository->get_stock_count();
-    }
     public function get_stock(Request $request)
     {
         return $this->GetStockRepository->get_stock($request);
+    }
+    public function get_category_last_stock(Request $request)
+    {
+        return $this->GetStockRepository->get_category_last_stock($request);
     }
 
     //get cal

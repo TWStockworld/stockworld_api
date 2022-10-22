@@ -60,6 +60,28 @@ class GetStockRepository
             'stock_data' => $stock_data, 'last_data' => $last_data
         ], 200);
     }
+
+    public function get_category_last_stock($request)
+    {
+        $stocks = StockCategory::find($request->stock_category_id)->StockName;
+        $stock_data = $stocks->map(function ($item) {
+            return $item->StockData->last();
+        });
+        $stock_data = $stock_data->map(function ($item) {
+            unset($item['id']);
+            $item['stock_name'] = StockName::get_stock_name_useid($item['stock_name_id']);
+            $item['stock_id'] = StockName::get_stock_id($item['stock_name_id']);
+            $item['day_change'] = round($item['day_change'], 2);
+            unset($item['created_at']);
+            unset($item['updated_at']);
+            unset($item['stock_name_id']);
+            return $item;
+        });
+        return response()->json([
+            'data' => $stock_data
+        ], 200);
+    }
+
     public function get_all_stock_probability()
     {
         $stock_calculate_group_id = 1;
