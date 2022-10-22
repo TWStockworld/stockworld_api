@@ -55,7 +55,7 @@ class GetStockRepository
         $stock_category = $stocks->StockCategory;
         $last_data = $stock_data->last();
         return response()->json([
-            'count' => $stocks->count(), 'stock_name' => $stocks['stock_name'], 'stock_category_id' => $stock_category['id'],
+            'count' => $stocks->count(), 'stock_name' => $stocks['stock_name'], 'stock_id' => $stock_id, 'stock_category_id' => $stock_category['id'],
             'stock_category' => $stock_category['category'],
             'stock_data' => $stock_data, 'last_data' => $last_data
         ], 200);
