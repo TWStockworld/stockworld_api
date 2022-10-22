@@ -148,7 +148,7 @@ class GetStockRepository
                 return $item;
             });
 
-            if ($show_zero_diff != 1) {
+            if ($show_zero_diff == 0) {
                 $probability_up = $probability_up->where('diff', '!=', 0)->sortByDesc('up')->values();
                 $probability_down = $probability_down->where('diff', '!=', 0)->sortByDesc('down')->values();
             }
@@ -174,23 +174,34 @@ class GetStockRepository
             });
 
 
-            $relation_up = $relation->where('sort', 1)->sortByDesc('up')->values();
+            $relation_up = $relation->where('sort', 1)->where('diff', '!=', 0)->sortByDesc('up')->take(10)->values();
             $relation_up = $relation_up->map(function ($item) {
                 unset($item['down']);
                 unset($item['sort']);
                 return $item;
             });
-            $relation_down = $relation->where('sort', 2)->sortByDesc('down')->values();
+            $relation_down = $relation->where('sort', 2)->where('diff', '!=', 0)->sortByDesc('down')->take(10)->values();
             $relation_down = $relation_down->map(function ($item) {
                 unset($item['up']);
                 unset($item['sort']);
                 return $item;
             });
 
-            if ($show_zero_diff != 1) {
-
-                $relation_up = $relation_up->where('diff', '!=', 0)->sortByDesc('up')->values();
-                $relation_down = $relation_down->where('diff', '!=', 0)->sortByDesc('down')->values();
+            if ($show_zero_diff == 1) {
+                $relation_up_zero = $relation->where('diff', 0)->where('sort', 1)->sortByDesc('up')->take(5)->values()
+                    ->map(function ($item) {
+                        unset($item['down']);
+                        unset($item['sort']);
+                        return $item;
+                    });
+                $relation_down_zero = $relation->where('diff', 0)->where('sort', 2)->sortByDesc('down')->take(5)->values()
+                    ->map(function ($item) {
+                        unset($item['up']);
+                        unset($item['sort']);
+                        return $item;
+                    });
+                $relation_up = collect([$relation_up_zero, $relation_up])->flatten(1);
+                $relation_down = collect([$relation_down_zero, $relation_down])->flatten(1);
             }
         }
         return response()->json([
