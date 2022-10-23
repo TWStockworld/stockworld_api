@@ -38,9 +38,17 @@ class TestController extends Controller
     }
     public function test3()
     {
-        $bb = collect([1, 2, 3, 4, 5, 6, 7]);
-        $aa = $bb->take(3);
-        return response()->json(['success' =>  $aa . '22' . $bb], 200);
+        $stock_category_id = 5;
+
+        if ($stock_category_id) {
+            $B_category = collect();
+
+            $data = StockName::where('stock_category_id', $stock_category_id)->get();
+            $data->map(function ($item) use ($B_category) {
+                $B_category->push($item->StockCalculateStockB);
+            });
+        }
+        return response()->json(['A_B_same_category_up' => $B_category->flatten(1)], 200);
     }
     public function test4()
     {

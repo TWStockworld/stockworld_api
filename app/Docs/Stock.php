@@ -109,6 +109,15 @@ namespace App\Docs;
  *              type="string"
  *          )
  *      ),
+ *      @OA\Parameter(
+ *          name="stock_category_id",
+ *          description="是否要以種類來篩選",
+ *          required=true,
+ *          in="query",
+ *          @OA\Schema(
+ *              type="string"
+ *          )
+ *      ),
  *      @OA\Response(
  *          response=200,
  *          description="請求成功"

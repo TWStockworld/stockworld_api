@@ -62,5 +62,13 @@
         "workspaceRoot": "/var/www/stockworld_api",
         "workspacePath": "app/Repositories",
         "id": "EvY2dQAIXexiBfO8"
+    },
+    {
+        "type": "Directory",
+        "name": "/var/www/stockworld_api/app/Docs",
+        "parent_id": null,
+        "workspaceRoot": "/var/www/stockworld_api",
+        "workspacePath": "app/Docs",
+        "id": "UHWpFD3xKX2RvN4O"
     }
 ]
