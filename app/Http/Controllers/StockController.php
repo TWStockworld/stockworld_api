@@ -5,17 +5,21 @@ namespace App\Http\Controllers;
 use App\Repositories\UpdateStockRepository;
 use App\Repositories\GetStockRepository;
 use App\Repositories\CalStockRepository;
+use App\Repositories\GetStockCalRepository;
 use Illuminate\Http\Request;
 
 class StockController extends Controller
 {
     protected $UpdateStockRepository;
     protected $GetStockRepository;
+    protected $GetStockCalRepository;
     protected $CalStockRepository;
-    public function __construct(UpdateStockRepository $UpdateStockRepository, GetStockRepository $GetStockRepository, CalStockRepository $CalStockRepository)
+
+    public function __construct(UpdateStockRepository $UpdateStockRepository, GetStockRepository $GetStockRepository, GetStockCalRepository $GetStockCalRepository, CalStockRepository $CalStockRepository)
     {
         $this->UpdateStockRepository = $UpdateStockRepository;
         $this->GetStockRepository = $GetStockRepository;
+        $this->GetStockCalRepository = $GetStockCalRepository;
         $this->CalStockRepository = $CalStockRepository;
     }
     //update
@@ -54,11 +58,11 @@ class StockController extends Controller
     //get cal
     public function get_all_stock_probability()
     {
-        return $this->GetStockRepository->get_all_stock_probability();
+        return $this->GetStockCalRepository->get_all_stock_probability();
     }
     public function get_stock_probability(Request $request)
     {
-        return $this->GetStockRepository->get_stock_probability($request);
+        return $this->GetStockCalRepository->get_stock_probability($request);
     }
 
 
