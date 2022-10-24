@@ -80,6 +80,15 @@ namespace App\Docs;
  *              type="string"
  *          )
  *      ),
+ *    @OA\Parameter(
+ *          name="page",
+ *          description="分頁",
+ *          required=true,
+ *          in="query",
+ *          @OA\Schema(
+ *              type="string"
+ *          )
+ *      ),
  *      @OA\Response(
  *          response=200,
  *          description="請求成功"
