@@ -51,7 +51,8 @@ class GetStockRepository
 
     public function get_category_last_stock($request)
     {
-        $stocks = StockCategory::find($request->stock_category_id)->StockName;
+        $page = $request->page;
+        $stocks = StockCategory::find($request->stock_category_id)->StockName->slice($page * 10, $page + 10)->values();
         $stock_data = $stocks->map(function ($item) {
             return $item->StockData->last();
         });
@@ -66,7 +67,7 @@ class GetStockRepository
             return $item;
         });
         return response()->json([
-            'data' => $stock_data
+            'stocks' => $stock_data
         ], 200);
     }
 
