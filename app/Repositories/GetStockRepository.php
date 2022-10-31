@@ -52,7 +52,13 @@ class GetStockRepository
     public function get_category_last_stock($request)
     {
         $page = $request->page;
-        $stocks = StockCategory::find($request->stock_category_id)->StockName->slice($page * 10, $page + 10)->values();
+        $stock_id = $request->stock_id;
+        $request->stock_category_id;
+        if ($request->stock_category_id != '') {
+            $stocks = StockCategory::find($request->stock_category_id)->StockName->slice($page * 10, $page + 10)->values();
+        } else {
+            $stocks = StockName::where('stock_id', $stock_id)->first()->StockCategory->StockName->slice($page * 10, $page + 10)->values();
+        }
         $stock_data = $stocks->map(function ($item) {
             return $item->StockData->last();
         });
