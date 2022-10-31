@@ -70,7 +70,8 @@ Route::prefix('stock')->group(function () {
     Route::post('get_stock', [StockController::class, 'get_stock']);
 
     //get cal
-    Route::get('get_all_stock_probability', [StockController::class, 'get_all_stock_probability']);
+    Route::get('save_all_stock_probability', [StockController::class, 'save_all_stock_probability']);
+    Route::post('get_all_stock_probability', [StockController::class, 'get_all_stock_probability']);
     Route::post('get_stock_probability', [StockController::class, 'get_stock_probability']);
 
     //get bulletin

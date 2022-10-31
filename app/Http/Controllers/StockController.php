@@ -56,9 +56,13 @@ class StockController extends Controller
     }
 
     //get cal
-    public function get_all_stock_probability()
+    public function save_all_stock_probability()
     {
-        return $this->GetStockCalRepository->get_all_stock_probability();
+        return $this->GetStockCalRepository->save_all_stock_probability();
+    }
+    public function get_all_stock_probability(Request $request)
+    {
+        return $this->GetStockCalRepository->get_all_stock_probability($request);
     }
     public function get_stock_probability(Request $request)
     {

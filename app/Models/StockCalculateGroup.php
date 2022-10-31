@@ -13,4 +13,8 @@ class StockCalculateGroup extends Model
     {
         return $this->hasMany(StockCalculate::class);
     }
+    public function StockCalculateOptimal()
+    {
+        return $this->hasMany(StockCalculateOptimal::class);
+    }
 }

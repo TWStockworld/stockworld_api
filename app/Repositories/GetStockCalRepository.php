@@ -5,20 +5,73 @@ namespace App\Repositories;
 use App\Models\StockCalculate;
 use App\Models\StockName;
 use App\Models\StockCalculateGroup;
+use App\Models\StockCalculateOptimal;
 
 class GetStockCalRepository
 {
-
-    public function get_all_stock_probability()
+    public function save_all_stock_probability()
     {
+        $stock_calculate_group_id = 2;
+        if (!StockCalculateOptimal::where('stock_calculate_group_id', $stock_calculate_group_id)->first()) {
+            $probability = StockCalculate::where(['stock_calculate_group_id' => $stock_calculate_group_id])->get();
+
+            $probability_up_zero = $probability->where('diff', 0)->where('sort', 1)->sortByDesc('up')->take(10)->values();
+            $probability_down_zero = $probability->where('diff', 0)->where('sort', 2)->sortByDesc('down')->take(10)->values();
+
+            $probability_up =  $probability->where('sort', 1)->where('diff', '!=', 0)->sortByDesc('up')->values()->take(20);
+            $probability_down =  $probability->where('sort', 2)->where('diff', '!=', 0)->sortByDesc('down')->values()->take(20);
+
+            $probability_up = collect([$probability_up_zero, $probability_up])->flatten(1)->sortByDesc('up')->values();
+            $probability_down = collect([$probability_down_zero, $probability_down])->flatten(1)->sortByDesc('down')->values();
+
+            $out = collect([$probability_up, $probability_down])->flatten(1)->map(function ($item, $key) {
+                unset($item['id']);
+                unset($item['created_at']);
+                unset($item['updated_at']);
+
+                $item['created_at'] = date('Y-m-d H:i:s');
+                $item['updated_at'] = date('Y-m-d H:i:s');
+                return $item;
+            });
+            StockCalculateOptimal::insert($out->toArray());
+        }
+        return response()->json([
+            'success' => '儲存成功'
+        ], 200);
+    }
+    public function get_all_stock_probability($request)
+    {
+        $show_zero_diff = $request->show_zero_diff;
+        $show_zero_diff = 0;
         $stock_calculate_group_id = 1;
         $date = StockCalculateGroup::find($stock_calculate_group_id);
 
-        $probability_up = StockCalculate::where('diff', '!=', 0)->where(['sort' => 1, 'stock_calculate_group_id' => $stock_calculate_group_id])->get()->sortByDesc('up')->values()->take(10);
-        $probability_down = StockCalculate::where('diff', '!=', 0)->where(['sort' => 2, 'stock_calculate_group_id' => $stock_calculate_group_id])->get()->sortByDesc('down')->values()->take(10);
+        $probability = StockCalculateOptimal::where(['stock_calculate_group_id' => $stock_calculate_group_id])->get();
+
+        $probability_up =  $probability->where('sort', 1)->where('diff', '!=', 0)->sortByDesc('up')->values()->take(20);
+        $probability_down =  $probability->where('sort', 2)->where('diff', '!=', 0)->sortByDesc('down')->values()->take(20);
 
         self::tidy_cal_data($probability_up, 1);
         self::tidy_cal_data($probability_down, 2);
+
+        if ($show_zero_diff == 1) {
+            $probability_up_zero = $probability->where('diff', 0)->where('sort', 1)->sortByDesc('up')->take(10)->values();
+            self::tidy_cal_data($probability_up_zero, 1);
+
+            $probability_down_zero = $probability->where('diff', 0)->where('sort', 2)->sortByDesc('down')->take(10)->values();
+            self::tidy_cal_data($probability_down_zero, 2);
+
+            $probability_up = collect([$probability_up_zero, $probability_up])->flatten(1)->sortByDesc('up')->values()->map(function ($item, $key) {
+                unset($item['order']);
+                $item['order'] = $key + 1;
+                return $item;
+            });
+            $probability_down = collect([$probability_down_zero, $probability_down])->flatten(1)->sortByDesc('down')->values()->map(function ($item, $key) {
+                unset($item['order']);
+                $item['order'] = $key + 1;
+                return $item;
+            });
+        }
 
         return response()->json([
             'data_start_date' => $date->startdate, 'data_end_date' => $date->enddate,
