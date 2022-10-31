@@ -18,7 +18,7 @@ use App\Models\StockName;
 class UpdateStockDataJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    public $tries = 2;
+    public $tries = 1;
     protected $input; // you forgot of put this line
 
     public function __construct($input)
