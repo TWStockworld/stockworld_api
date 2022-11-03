@@ -6,6 +6,7 @@ use App\Models\StockCalculate;
 use App\Models\StockName;
 use App\Models\StockCalculateGroup;
 use App\Models\StockCalculateOptimal;
+use App\Models\StockSpecialKindDetail;
 
 class GetStockCalRepository
 {
@@ -83,6 +84,7 @@ class GetStockCalRepository
         $stock_id = $request->stock_id;
         $show_zero_diff = $request->show_zero_diff;
         $stock_category_id = $request->stock_category_id;
+        $bulletin_id = $request->bulletin_id;
 
         $stock_calculate_group_id = 1;
         $date = StockCalculateGroup::find($stock_calculate_group_id);
@@ -90,16 +92,92 @@ class GetStockCalRepository
 
         $data = StockName::where('stock_id', $stock_id)->first();
         $relation = StockName::where('stock_id', $stock_id)->first();
-        $probability_up = collect();
-        $probability_down = collect();
-        $relation_up = collect();
-        $relation_down = collect();
-        $A_B_same_category_up = collect();
-        $A_B_same_category_down = collect();
-        $B_category_up = collect();
-        $B_category_down = collect();
 
-        if ($stock_category_id) {
+        if ($bulletin_id) {
+            $A_B_same_bulletin = collect();
+            $B_bulletin = collect();
+
+            $data = StockSpecialKindDetail::where('bulletin_id', $bulletin_id)->get();
+            $all_stock_id = collect();
+            $data->map(function ($item) use ($all_stock_id) {
+                $all_stock_id->push($item['stock_name_id']);
+            });
+            $data->map(function ($item) use ($A_B_same_bulletin, $all_stock_id) {
+                $item->StockName->StockCalculateStockA->map(function ($item) use ($A_B_same_bulletin, $all_stock_id) {
+                    if ($all_stock_id->contains($item['stockB_name_id'])) {
+                        $A_B_same_bulletin->push($item);
+                    }
+                });
+            });
+
+            $data->map(function ($item) use ($B_bulletin) {
+                $B_bulletin->push($item->StockName->StockCalculateStockB);
+            });
+
+            $A_B_same_bulletin = $A_B_same_bulletin->where('stock_calculate_group_id', $stock_calculate_group_id);
+            $B_bulletin = $B_bulletin->flatten(1)->where('stock_calculate_group_id', $stock_calculate_group_id);
+
+
+            //A_B
+            $A_B_same_bulletin_up = $A_B_same_bulletin->where('sort', 1)->where('diff', '!=', 0)->sortByDesc('up')->values()->take(10);
+            self::tidy_cal_data($A_B_same_bulletin_up, 1);
+
+            $A_B_same_bulletin_down = $A_B_same_bulletin->where('sort', 2)->where('diff', '!=', 0)->sortByDesc('down')->values()->take(10);
+            self::tidy_cal_data($A_B_same_bulletin_down, 2);
+
+
+            if ($show_zero_diff == 1) {
+                $A_B_same_bulletin_up_zero = $A_B_same_bulletin->where('diff', 0)->where('sort', 1)->sortByDesc('up')->take(5)->values();
+                self::tidy_cal_data($A_B_same_bulletin_up_zero, 1);
+
+                $A_B_same_bulletin_down_zero = $A_B_same_bulletin->where('diff', 0)->where('sort', 2)->sortByDesc('down')->take(5)->values();
+                self::tidy_cal_data($A_B_same_bulletin_down_zero, 2);
+
+                $A_B_same_bulletin_up = collect([$A_B_same_bulletin_up_zero, $A_B_same_bulletin_up])->flatten(1)->sortByDesc('up')->values()->map(function ($item, $key) {
+                    unset($item['order']);
+                    $item['order'] = $key + 1;
+                    return $item;
+                });;
+                $A_B_same_bulletin_down = collect([$A_B_same_bulletin_down_zero, $A_B_same_bulletin_down])->flatten(1)->sortByDesc('down')->values()->map(function ($item, $key) {
+                    unset($item['order']);
+                    $item['order'] = $key + 1;
+                    return $item;
+                });
+            }
+            //全部_B
+
+            $B_bulletin_up = $B_bulletin->where('sort', 1)->where('diff', '!=', 0)->sortByDesc('up')->values()->take(10);
+            self::tidy_cal_data($B_bulletin_up, 1);
+
+            $B_bulletin_down = $B_bulletin->where('sort', 2)->where('diff', '!=', 0)->sortByDesc('down')->values()->take(10);
+            self::tidy_cal_data($B_bulletin_down, 2);
+
+
+            if ($show_zero_diff == 1) {
+                $B_bulletin_up_zero = $B_bulletin->where('diff', 0)->where('sort', 1)->sortByDesc('up')->take(5)->values();
+                self::tidy_cal_data($B_bulletin_up_zero, 1);
+
+                $B_bulletin_down_zero = $B_bulletin->where('diff', 0)->where('sort', 2)->sortByDesc('down')->take(5)->values();
+                self::tidy_cal_data($B_bulletin_down_zero, 2);
+
+                $B_bulletin_up = collect([$B_bulletin_up_zero, $B_bulletin_up])->flatten(1)->sortByDesc('up')->values()->map(function ($item, $key) {
+                    unset($item['order']);
+                    $item['order'] = $key + 1;
+                    return $item;
+                });
+                $B_bulletin_down = collect([$B_bulletin_down_zero, $B_bulletin_down])->flatten(1)->sortByDesc('down')->values()->map(function ($item, $key) {
+                    unset($item['order']);
+                    $item['order'] = $key + 1;
+                    return $item;
+                });
+            }
+
+
+            $probability_up = $A_B_same_bulletin_up;
+            $probability_down = $A_B_same_bulletin_down;
+            $relation_up = $B_bulletin_up;
+            $relation_down = $B_bulletin_down;
+        } else if ($stock_category_id) {
             $A_B_same_category = collect();
             $B_category = collect();
 
