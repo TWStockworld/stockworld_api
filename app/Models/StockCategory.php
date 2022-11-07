@@ -16,8 +16,14 @@ class StockCategory extends Model
     }
     public static function get_stock_category_id($name)
     {
-        $result = StockCategory::where('category',$name)->first()->id;
-    
+        $result = StockCategory::where('category', $name)->first()->id;
+
+        return $result;
+    }
+    public static function get_stock_category_name($id)
+    {
+        $result = StockCategory::find($id)->category;
+
         return $result;
     }
 }

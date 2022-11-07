@@ -84,21 +84,25 @@ class GetStockRepository
         $bulletins = Bulletin::all();
         return response()->json(['success' => $bulletins], 200);
     }
-    public function get_stock_special_kind($request)
-    {
-        $bulletin_id = $request->bulletin_id;
-        $stock_special_kind = Bulletin::find($bulletin_id)->StockSpecialKind;
-        return response()->json(['success' => $stock_special_kind], 200);
-    }
     public function get_stock_special_kind_detail($request)
     {
         $bulletin_id = $request->bulletin_id;
-        $stock_special_kind_id = $request->stock_special_kind_id;
-        $stock_special_kind_detail = StockSpecialKindDetail::where(['bulletin_id' => $bulletin_id, 'stock_special_kind_id' => $stock_special_kind_id])->get();
+        $stock_special_kind_detail = StockSpecialKindDetail::where(['bulletin_id' => $bulletin_id])->get();
 
         $stocks = collect();
         $stock_special_kind_detail->map(function ($item) use ($stocks) {
-            $stocks->push($item->stockname);
+            $name = collect($item->stockname);
+            $cate = collect($item->StockSpecialKind);
+            $stocks->push($name->merge($cate));
+        });
+        $stocks = $stocks->map(function ($item, $key) {
+            unset($item['id']);
+            $item['stock_category'] = StockCategory::get_stock_category_name($item['stock_category_id']);
+            unset($item['created_at']);
+            unset($item['updated_at']);
+            unset($item['type']);
+            unset($item['bulletin_id']);
+            return $item;
         });
         return response()->json(['success' => $stocks], 200);
     }
