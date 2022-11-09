@@ -180,6 +180,7 @@ class GetStockCalRepository
         } else if ($stock_category_id) {
             $A_B_same_category = collect();
             $B_category = collect();
+            $BB_category = collect();
 
             $data = StockName::where('stock_category_id', $stock_category_id)->get();
             $all_stock_id = collect();
@@ -198,8 +199,14 @@ class GetStockCalRepository
                 $B_category->push($item->StockCalculateStockB);
             });
 
+            $B_category->flatten(1)->map(function ($item) use ($BB_category, $stock_category_id) {
+                if ($item->StockAName->stock_category_id != $stock_category_id) {
+                    $BB_category->push($item);
+                }
+            });
+
             $A_B_same_category = $A_B_same_category->where('stock_calculate_group_id', $stock_calculate_group_id);
-            $B_category = $B_category->flatten(1)->where('stock_calculate_group_id', $stock_calculate_group_id);
+            $B_category = $BB_category->where('stock_calculate_group_id', $stock_calculate_group_id);
 
 
             //A_B

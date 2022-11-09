@@ -15,14 +15,21 @@ class TestController extends Controller
 
     public function test1()
     {
-        $startdate = '2018-01-01';
-        $enddate = '2022-09-01';
-        $diff = 10;
-        $add_diff_enddate = date("Y-m-d", strtotime($enddate . '+ 15 days'));
+        $stock_category_id = 25;
+        $data = StockName::where('stock_category_id', $stock_category_id)->get();
+        $B_category = collect();
+        $BB_category = collect();
+        $data->map(function ($item) use ($B_category, $stock_category_id) {
+            // if ($item->StockCalculateStockA->StockAName->stock_category_id != $stock_category_id)
+            $B_category->push($item->StockCalculateStockB);
+        });
+        $B_category->flatten(1)->map(function ($item) use ($BB_category, $stock_category_id) {
+            if ($item->StockAName->stock_category_id != $stock_category_id) {
+                $BB_category->push($item);
+            }
+        });
 
-        $stock_data_temp = StockData::where('date', '>=', $startdate)->where('date', '<=', $add_diff_enddate)->get()->groupby('stock_name_id');
-
-        return response()->json(['success' => $stock_data_temp], 200);
+        return response()->json(['success' => $BB_category], 200);
     }
     public function test2()
     {
