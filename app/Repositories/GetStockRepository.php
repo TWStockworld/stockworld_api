@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Bulletin;
 use App\Models\StockCalculate;
+use App\Models\StockCalculateGroup;
 use App\Models\StockCategory;
 use App\Models\StockData;
 use App\Models\StockName;
@@ -76,6 +77,12 @@ class GetStockRepository
         });
         return response()->json([
             'stocks' => $stock_data
+        ], 200);
+    }
+    public function get_stock_calculate_groups()
+    {
+        return response()->json([
+            'success' => StockCalculateGroup::all()
         ], 200);
     }
 

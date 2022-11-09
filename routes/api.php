@@ -68,6 +68,7 @@ Route::prefix('stock')->group(function () {
     Route::post('get_stock_name', [StockController::class, 'get_stock_name']);
     Route::post('get_category_last_stock', [StockController::class, 'get_category_last_stock']);
     Route::post('get_stock', [StockController::class, 'get_stock']);
+    Route::get('get_stock_calculate_groups', [StockController::class, 'get_stock_calculate_groups']);
 
     //get cal
     Route::get('save_all_stock_probability', [StockController::class, 'save_all_stock_probability']);
@@ -76,7 +77,6 @@ Route::prefix('stock')->group(function () {
 
     //get bulletin
     Route::get('get_bulletin', [StockController::class, 'get_bulletin']);
-    Route::post('get_stock_special_kind', [StockController::class, 'get_stock_special_kind']);
     Route::post('get_stock_special_kind_detail', [StockController::class, 'get_stock_special_kind_detail']);
 
     //cal

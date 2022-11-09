@@ -12,7 +12,7 @@ class GetStockCalRepository
 {
     public function save_all_stock_probability()
     {
-        $stock_calculate_group_id = 2;
+        $stock_calculate_group_id = 3;
         if (!StockCalculateOptimal::where('stock_calculate_group_id', $stock_calculate_group_id)->first()) {
             $probability = StockCalculate::where(['stock_calculate_group_id' => $stock_calculate_group_id])->get();
 
@@ -44,7 +44,7 @@ class GetStockCalRepository
     {
         $show_zero_diff = $request->show_zero_diff;
         $show_zero_diff = 0;
-        $stock_calculate_group_id = 1;
+        $stock_calculate_group_id = $request->stock_calculate_groups_id;
         $date = StockCalculateGroup::find($stock_calculate_group_id);
 
         $probability = StockCalculateOptimal::where(['stock_calculate_group_id' => $stock_calculate_group_id])->get();
@@ -86,7 +86,7 @@ class GetStockCalRepository
         $stock_category_id = $request->stock_category_id;
         $bulletin_id = $request->bulletin_id;
 
-        $stock_calculate_group_id = 1;
+        $stock_calculate_group_id = $request->stock_calculate_groups_id;
         $date = StockCalculateGroup::find($stock_calculate_group_id);
 
 
@@ -340,10 +340,29 @@ class GetStockCalRepository
                 unset($item['stock_calculate_group_id']);
                 unset($item['created_at']);
                 unset($item['updated_at']);
+
                 $item['stockA_name'] = StockName::get_stock_name_useid($item['stockA_name_id']);
                 $item['stockA_id'] = StockName::get_stock_id($item['stockA_name_id']);
+                $item['stockA_category_id'] = StockName::find($item['stockA_name_id'])->StockCategory->id;
+                $item['stockA_category'] = StockName::find($item['stockA_name_id'])->StockCategory->category;
+                $stockA_spectial_category = collect();
+                StockName::find($item['stockA_name_id'])->StockSpecialKindDetail->map(function ($item, $key) use ($stockA_spectial_category) {
+                    $result = ['bulletin_id' => $item->bulletin_id, 'title' => $item->StockSpecialKind->title];
+                    $stockA_spectial_category->push($result);
+                });
+                $item['stockA_spectial_category'] = $stockA_spectial_category;
+
                 $item['stockB_name'] = StockName::get_stock_name_useid($item['stockB_name_id']);
                 $item['stockB_id'] = StockName::get_stock_id($item['stockB_name_id']);
+                $item['stockB_category_id'] = StockName::find($item['stockB_name_id'])->StockCategory->id;
+                $item['stockB_category'] = StockName::find($item['stockB_name_id'])->StockCategory->category;
+                $stockB_spectial_category = collect();
+                StockName::find($item['stockB_name_id'])->StockSpecialKindDetail->map(function ($item, $key) use ($stockB_spectial_category) {
+                    $result = ['bulletin_id' => $item->bulletin_id, 'title' => $item->StockSpecialKind->title];
+                    $stockB_spectial_category->push($result);
+                });
+                $item['stockB_spectial_category'] = $stockB_spectial_category;
+
                 $item['up'] = $item['up'] . '%';
                 unset($item['stockA_name_id']);
                 unset($item['stockB_name_id']);
@@ -358,10 +377,29 @@ class GetStockCalRepository
                 unset($item['stock_calculate_group_id']);
                 unset($item['created_at']);
                 unset($item['updated_at']);
+
                 $item['stockA_name'] = StockName::get_stock_name_useid($item['stockA_name_id']);
                 $item['stockA_id'] = StockName::get_stock_id($item['stockA_name_id']);
+                $item['stockA_category_id'] = StockName::find($item['stockA_name_id'])->StockCategory->id;
+                $item['stockA_category'] = StockName::find($item['stockA_name_id'])->StockCategory->category;
+                $stockA_spectial_category = collect();
+                StockName::find($item['stockA_name_id'])->StockSpecialKindDetail->map(function ($item, $key) use ($stockA_spectial_category) {
+                    $result = ['bulletin_id' => $item->bulletin_id, 'title' => $item->StockSpecialKind->title];
+                    $stockA_spectial_category->push($result);
+                });
+                $item['stockA_spectial_category'] = $stockA_spectial_category;
+
                 $item['stockB_name'] = StockName::get_stock_name_useid($item['stockB_name_id']);
                 $item['stockB_id'] = StockName::get_stock_id($item['stockB_name_id']);
+                $item['stockB_category_id'] = StockName::find($item['stockB_name_id'])->StockCategory->id;
+                $item['stockB_category'] = StockName::find($item['stockB_name_id'])->StockCategory->category;
+                $stockB_spectial_category = collect();
+                StockName::find($item['stockB_name_id'])->StockSpecialKindDetail->map(function ($item, $key) use ($stockB_spectial_category) {
+                    $result = ['bulletin_id' => $item->bulletin_id, 'title' => $item->StockSpecialKind->title];
+                    $stockB_spectial_category->push($result);
+                });
+                $item['stockB_spectial_category'] = $stockB_spectial_category;
+
                 $item['down'] = $item['down'] . '%';
                 unset($item['stockA_name_id']);
                 unset($item['stockB_name_id']);
