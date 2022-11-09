@@ -41,6 +41,7 @@ class CalStockRepository
         $startdate = $data->startdate; //'2021-01-01';
         $enddate = $data->enddate; //'2021-12-01';
         $diff = $data->diff;
+        $upordown = $data->upordown;
 
         $stockA_id = $data->stockA_id;
         $stockB_id = $data->stockB_id;
@@ -49,7 +50,13 @@ class CalStockRepository
 
         list($up, $down, $stockA_datas, $stockB_datas) = self::cal_two_stock($startdate, $enddate, $diff, $stockA_id, $stockB_id);
 
-        $sendresult = $stockA_name . "(" . $stockA_id . "黃線)" . "漲，" . $stockB_name . "(" . $stockB_id . "藍線)" . $diff . "天後 也跟著漲" . $up . "%    ,     " . $stockA_name . "(" . $stockA_id . "黃線)" . "跌，" . $stockB_name . "(" . $stockB_id . "藍線)" . $diff . "天後 也跟著跌" . $down . "%";
+        if ($upordown == 1) {
+            $sendresult = $stockA_name . "(" . $stockA_id . "黃線)" . "漲，" . $stockB_name . "(" . $stockB_id . "藍線)" . $diff . "天後 也跟著漲" . $up . "%";
+        } else if ($upordown == 2) {
+            $sendresult = $stockA_name . "(" . $stockA_id . "黃線)" . "跌，" . $stockB_name . "(" . $stockB_id . "藍線)" . $diff . "天後 也跟著跌" . $down . "%";
+        } else {
+            $sendresult = $stockA_name . "(" . $stockA_id . "黃線)" . "漲，" . $stockB_name . "(" . $stockB_id . "藍線)" . $diff . "天後 也跟著漲" . $up . "%    ,     " . $stockA_name . "(" . $stockA_id . "黃線)" . "跌，" . $stockB_name . "(" . $stockB_id . "藍線)" . $diff . "天後 也跟著跌" . $down . "%";
+        }
 
         $real_diff = (strtotime($stockB_datas[0]['date']) - strtotime($stockA_datas[0]['date'])) / (60 * 60 * 24);
         return response()->json(['success' => $sendresult, 'stockA_datas' => $stockA_datas, 'stockB_datas' => $stockB_datas, 'real_diff' => $real_diff], 200);
