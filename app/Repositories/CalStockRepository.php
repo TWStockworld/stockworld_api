@@ -58,8 +58,8 @@ class CalStockRepository
             $sendresult = $stockA_name . "(" . $stockA_id . "黃線)" . "漲，" . $stockB_name . "(" . $stockB_id . "藍線)" . $diff . "天後 也跟著漲" . $up . "%    ,     " . $stockA_name . "(" . $stockA_id . "黃線)" . "跌，" . $stockB_name . "(" . $stockB_id . "藍線)" . $diff . "天後 也跟著跌" . $down . "%";
         }
 
-        $real_diff = (strtotime($stockB_datas[0]['date']) - strtotime($stockA_datas[0]['date'])) / (60 * 60 * 24);
-        return response()->json(['success' => $sendresult, 'stockA_datas' => $stockA_datas, 'stockB_datas' => $stockB_datas, 'real_diff' => $real_diff], 200);
+        // $real_diff = (strtotime($stockB_datas[0]['date']) - strtotime($stockA_datas[0]['date'])) / (60 * 60 * 24);
+        return response()->json(['success' => $sendresult, 'stockA_datas' => $stockA_datas, 'stockB_datas' => $stockB_datas], 200);
     }
     public function cal_two_stock($startdate, $enddate, $diff, $stockA, $stockB)
     {
