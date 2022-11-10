@@ -96,11 +96,15 @@ class GetStockCalRepository
         if ($bulletin_id) {
             $A_B_same_bulletin = collect();
             $B_bulletin = collect();
-
+            $BB_bulletin = collect();
             $data = StockSpecialKindDetail::where('bulletin_id', $bulletin_id)->get();
             $all_stock_id = collect();
-            $data->map(function ($item) use ($all_stock_id) {
-                $all_stock_id->push($item['stock_name_id']);
+            $data->map(function ($item, $key) use ($all_stock_id, $data) {
+                if (!$all_stock_id->contains($item['stock_name_id'])) {
+                    $all_stock_id->push($item['stock_name_id']);
+                } else {
+                    $data->forget($key);
+                }
             });
             $data->map(function ($item) use ($A_B_same_bulletin, $all_stock_id) {
                 $item->StockName->StockCalculateStockA->map(function ($item) use ($A_B_same_bulletin, $all_stock_id) {
