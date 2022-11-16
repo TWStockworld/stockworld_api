@@ -82,6 +82,7 @@ Route::prefix('stock')->group(function () {
     //cal
     Route::post('cal_all_stock_probability', [StockController::class, 'cal_all_stock_probability']);
     Route::post('cal_stock', [StockController::class, 'cal_stock']);
+    Route::post('cal_stock_withoutdiff', [StockController::class, 'cal_stock_withoutdiff']);
 });
 
 Route::middleware('auth:api')->group(function () {

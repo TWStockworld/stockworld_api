@@ -1,0 +1,134 @@
+[
+    {
+        "SecuritiesIndustryCode": "01",
+        "category": "水泥工業"
+    },
+    {
+        "SecuritiesIndustryCode": "02",
+        "category": "食品工業"
+    },
+    {
+        "SecuritiesIndustryCode": "03",
+        "category": "塑膠工業"
+    },
+    {
+        "SecuritiesIndustryCode": "04",
+        "category": "紡織纖維"
+    },
+    {
+        "SecuritiesIndustryCode": "05",
+        "category": "電機機械"
+    },
+    {
+        "SecuritiesIndustryCode": "06",
+        "category": "電器電纜"
+    },
+    {
+        "SecuritiesIndustryCode": "21",
+        "category": "化學工業"
+    },
+    {
+        "SecuritiesIndustryCode": "22",
+        "category": "生技醫療業"
+    },
+    {
+        "SecuritiesIndustryCode": "08",
+        "category": "玻璃陶瓷"
+    },
+    {
+        "SecuritiesIndustryCode": "09",
+        "category": "造紙工業"
+    },
+    {
+        "SecuritiesIndustryCode": "10",
+        "category": "鋼鐵工業"
+    },
+    {
+        "SecuritiesIndustryCode": "11",
+        "category": "橡膠工業"
+    },
+    {
+        "SecuritiesIndustryCode": "12",
+        "category": "汽車工業"
+    },
+    {
+        "SecuritiesIndustryCode": "24",
+        "category": "半導體業"
+    },
+    {
+        "SecuritiesIndustryCode": "25",
+        "category": "電腦及週邊設備業"
+    },
+    {
+        "SecuritiesIndustryCode": "26",
+        "category": "光電業"
+    },
+    {
+        "SecuritiesIndustryCode": "27",
+        "category": "通信網路業"
+    },
+    {
+        "SecuritiesIndustryCode": "28",
+        "category": "電子零組件業"
+    },
+    {
+        "SecuritiesIndustryCode": "29",
+        "category": "電子通路業"
+    },
+    {
+        "SecuritiesIndustryCode": "30",
+        "category": "資訊服務業"
+    },
+    {
+        "SecuritiesIndustryCode": "31",
+        "category": "其他電子業"
+    },
+    {
+        "SecuritiesIndustryCode": "14",
+        "category": "建材營造"
+    },
+    {
+        "SecuritiesIndustryCode": "15",
+        "category": "航運業"
+    },
+    {
+        "SecuritiesIndustryCode": "16",
+        "category": "觀光事業"
+    },
+    {
+        "SecuritiesIndustryCode": "17",
+        "category": "金融保險"
+    },
+    {
+        "SecuritiesIndustryCode": "18",
+        "category": "貿易百貨"
+    },
+    {
+        "SecuritiesIndustryCode": "23",
+        "category": "油電燃氣業"
+    },
+    {
+        "SecuritiesIndustryCode": "19",
+        "category": "綜合"
+    },
+    {
+        "SecuritiesIndustryCode": "20",
+        "category": "其他"
+    },
+    {
+        "SecuritiesIndustryCode": "32",
+        "category": "文化創意業"
+    },
+    {
+        "SecuritiesIndustryCode": "33",
+        "category": "農業科技業"
+    },
+    {
+        "SecuritiesIndustryCode": "34",
+        "category": "電子商務業"
+    },
+    {
+        "SecuritiesIndustryCode": "80",
+        "category": "管理股票"
+    }
+]

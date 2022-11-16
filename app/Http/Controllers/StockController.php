@@ -96,6 +96,10 @@ class StockController extends Controller
     {
         return $this->CalStockRepository->cal_stock($request);
     }
+    public function cal_stock_withoutdiff(Request $request)
+    {
+        return $this->CalStockRepository->cal_stock_withoutdiff($request);
+    }
     /**
      * Display a listing of the resource.
      *
