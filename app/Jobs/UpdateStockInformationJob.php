@@ -30,7 +30,7 @@ class UpdateStockInformationJob implements ShouldQueue
             $pool->get('https://openapi.twse.com.tw/v1/opendata/t187ap03_L'),
 
             //股票分類(制式 standard)
-            $pool->get('https://bakerychu.com/file/Industry_category.json'),
+            $pool->get('https://stock.bakerychu.com/api/Industry_category.json'),
         ]);
 
         //新增種類
