@@ -1,0 +1,647 @@
+{
+    "client": "Thunder Client",
+    "collectionName": "StockWorld",
+    "dateExported": "2023-07-11T14:31:59.545Z",
+    "version": "1.1",
+    "folders": [
+        {
+            "_id": "0e2167e0-ee68-46af-8e98-e669b06f3620",
+            "name": "Test",
+            "containerId": "",
+            "created": "2022-10-21T04:03:26.696Z",
+            "sortNum": 20000
+        },
+        {
+            "_id": "ed0ef626-3eb9-4a0c-8e43-1cc974b0261e",
+            "name": "Getcal",
+            "containerId": "",
+            "created": "2022-10-21T04:05:52.468Z",
+            "sortNum": 30000
+        },
+        {
+            "_id": "1e3007f9-58cb-4f86-98b2-8ed66c927dc6",
+            "name": "GetBasis",
+            "containerId": "",
+            "created": "2022-10-21T04:05:47.541Z",
+            "sortNum": 40000
+        },
+        {
+            "_id": "6cd45bcc-b93b-4e22-9d6b-eee924513b8b",
+            "name": "GetBulletin",
+            "containerId": "",
+            "created": "2022-10-21T04:06:03.999Z",
+            "sortNum": 60000
+        },
+        {
+            "_id": "0cc249b5-11cd-482f-b85b-20e8d8c8db28",
+            "name": "Cal",
+            "containerId": "",
+            "created": "2022-10-21T04:06:10.175Z",
+            "sortNum": 70000
+        },
+        {
+            "_id": "73e36975-72d8-4db8-855c-a21a2a169021",
+            "name": "Update",
+            "containerId": "",
+            "created": "2022-10-21T04:05:18.380Z",
+            "sortNum": 75000
+        },
+        {
+            "_id": "99830867-d8bd-446d-a208-0e8af86e2caa",
+            "name": "證交所API",
+            "containerId": "",
+            "created": "2022-10-21T04:07:02.209Z",
+            "sortNum": 80000
+        }
+    ],
+    "requests": [
+        {
+            "_id": "e9cdb275-23f9-4694-b435-10a2a6038066",
+            "colId": "9e5e6178-ea36-4f86-bf79-aa923004bad0",
+            "containerId": "0e2167e0-ee68-46af-8e98-e669b06f3620",
+            "name": "test3",
+            "url": "https://stock.bakerychu.com/api/test/test3",
+            "method": "GET",
+            "sortNum": 5000,
+            "created": "2022-10-21T12:34:27.097Z",
+            "modified": "2022-10-21T12:34:44.118Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "880391f3-84aa-4b75-9102-750abaaade8b",
+            "colId": "9e5e6178-ea36-4f86-bf79-aa923004bad0",
+            "containerId": "0e2167e0-ee68-46af-8e98-e669b06f3620",
+            "name": "test2",
+            "url": "https://stock.bakerychu.com/api/test/test2",
+            "method": "GET",
+            "sortNum": 10000,
+            "created": "2022-10-21T04:03:15.228Z",
+            "modified": "2022-10-21T04:08:59.201Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "a81d38b4-23bd-41d1-a993-7039343c6ba3",
+            "colId": "9e5e6178-ea36-4f86-bf79-aa923004bad0",
+            "containerId": "0e2167e0-ee68-46af-8e98-e669b06f3620",
+            "name": "test1",
+            "url": "https://stock.bakerychu.com/api/test/test1",
+            "method": "GET",
+            "sortNum": 20000,
+            "created": "2022-10-21T04:04:46.552Z",
+            "modified": "2022-11-10T09:21:01.835Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "\"id\": 4125,",
+                    "value": "",
+                    "isDisabled": true,
+                    "isPath": false
+                }
+            ],
+            "body": {
+                "type": "formencoded",
+                "raw": "",
+                "form": [
+                    {
+                        "name": "bulletin_id",
+                        "value": "1",
+                        "isDisabled": true
+                    },
+                    {
+                        "name": "stock_special_kind_id",
+                        "value": "3",
+                        "isDisabled": true
+                    }
+                ]
+            },
+            "tests": []
+        },
+        {
+            "_id": "2c963769-7bed-4998-b80a-b44ca6bb13bc",
+            "colId": "9e5e6178-ea36-4f86-bf79-aa923004bad0",
+            "containerId": "1e3007f9-58cb-4f86-98b2-8ed66c927dc6",
+            "name": "get_stock_category",
+            "url": "https://stock.bakerychu.com/api/stock/get_stock_category",
+            "method": "GET",
+            "sortNum": 20000,
+            "created": "2022-10-21T04:08:42.270Z",
+            "modified": "2022-11-10T11:05:55.916Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "59b0848a-9fa4-4f0d-8d83-cedb4b7ef153",
+            "colId": "9e5e6178-ea36-4f86-bf79-aa923004bad0",
+            "containerId": "0cc249b5-11cd-482f-b85b-20e8d8c8db28",
+            "name": "cal_all_stock_probability",
+            "url": "https://stock.bakerychu.com/api/stock/cal_all_stock_probability",
+            "method": "POST",
+            "sortNum": 30000,
+            "created": "2022-10-21T04:06:31.013Z",
+            "modified": "2022-12-13T15:57:08.408Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "formencoded",
+                "raw": "",
+                "form": [
+                    {
+                        "name": "startdate",
+                        "value": "2021-01-01"
+                    },
+                    {
+                        "name": "enddate",
+                        "value": "2021-12-31"
+                    },
+                    {
+                        "name": "diff",
+                        "value": "10"
+                    },
+                    {
+                        "name": "stock_category_id",
+                        "value": "1"
+                    }
+                ]
+            },
+            "tests": []
+        },
+        {
+            "_id": "e6b09771-dad6-44e0-8ad9-521389fbc61d",
+            "colId": "9e5e6178-ea36-4f86-bf79-aa923004bad0",
+            "containerId": "1e3007f9-58cb-4f86-98b2-8ed66c927dc6",
+            "name": "get_stock_name",
+            "url": "https://stock.bakerychu.com/api/stock/get_stock_name",
+            "method": "POST",
+            "sortNum": 30000,
+            "created": "2022-10-21T04:08:08.289Z",
+            "modified": "2022-11-10T11:07:16.297Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "formencoded",
+                "raw": "",
+                "form": [
+                    {
+                        "name": "stock_category_id",
+                        "value": "5"
+                    },
+                    {
+                        "name": "stock_type",
+                        "value": "2",
+                        "isDisabled": true
+                    }
+                ]
+            },
+            "tests": []
+        },
+        {
+            "_id": "c228ff52-6b1f-427d-8c62-5facc3390f68",
+            "colId": "9e5e6178-ea36-4f86-bf79-aa923004bad0",
+            "containerId": "1e3007f9-58cb-4f86-98b2-8ed66c927dc6",
+            "name": "get_stock",
+            "url": "https://stock.bakerychu.com/api/stock/get_stock",
+            "method": "POST",
+            "sortNum": 40000,
+            "created": "2022-10-21T04:07:18.719Z",
+            "modified": "2022-10-21T04:07:18.719Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "formencoded",
+                "raw": "",
+                "form": [
+                    {
+                        "name": "stock_id",
+                        "value": "2330"
+                    }
+                ]
+            },
+            "tests": []
+        },
+        {
+            "_id": "7aa35389-d8c5-4688-91f0-6b8c8613da5e",
+            "colId": "9e5e6178-ea36-4f86-bf79-aa923004bad0",
+            "containerId": "73e36975-72d8-4db8-855c-a21a2a169021",
+            "name": "update_stock_data",
+            "url": "https://stock.bakerychu.com/api/stock/update_stock_data",
+            "method": "POST",
+            "sortNum": 50000,
+            "created": "2022-10-21T04:07:30.949Z",
+            "modified": "2022-11-09T14:27:56.544Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "formencoded",
+                "raw": "",
+                "form": [
+                    {
+                        "name": "date",
+                        "value": "2022-11-09"
+                    }
+                ]
+            },
+            "tests": []
+        },
+        {
+            "_id": "27870bf4-d215-4b67-b612-a4f852f78fc3",
+            "colId": "9e5e6178-ea36-4f86-bf79-aa923004bad0",
+            "containerId": "99830867-d8bd-446d-a208-0e8af86e2caa",
+            "name": "上櫃公司",
+            "url": "http://www.tpex.org.tw/web/stock/aftertrading/daily_close_quotes/stk_quote_result.php?d=111/10/31",
+            "method": "GET",
+            "sortNum": 60000,
+            "created": "2022-10-21T04:07:41.508Z",
+            "modified": "2022-10-31T06:46:47.925Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "d",
+                    "value": "111/10/31",
+                    "isPath": false
+                }
+            ],
+            "tests": []
+        },
+        {
+            "_id": "eae37252-f57f-467e-9234-6e238437250d",
+            "colId": "9e5e6178-ea36-4f86-bf79-aa923004bad0",
+            "containerId": "99830867-d8bd-446d-a208-0e8af86e2caa",
+            "name": "上櫃公司 Copy",
+            "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap03_O",
+            "method": "GET",
+            "sortNum": 65000,
+            "created": "2022-11-14T17:18:36.527Z",
+            "modified": "2022-11-14T17:18:42.799Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "91800dc0-e23c-4e7c-b3a2-397a35088ec1",
+            "colId": "9e5e6178-ea36-4f86-bf79-aa923004bad0",
+            "containerId": "99830867-d8bd-446d-a208-0e8af86e2caa",
+            "name": "上市公司",
+            "url": "https://www.twse.com.tw/exchangeReport/MI_INDEX?date=20221031&type=ALL",
+            "method": "GET",
+            "sortNum": 70000,
+            "created": "2022-10-21T04:07:45.252Z",
+            "modified": "2022-10-31T06:46:24.332Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "date",
+                    "value": "20221031",
+                    "isPath": false
+                },
+                {
+                    "name": "type",
+                    "value": "ALL",
+                    "isPath": false
+                }
+            ],
+            "tests": []
+        },
+        {
+            "_id": "116bfd5e-de68-4e7f-9719-5a58e2c36810",
+            "colId": "9e5e6178-ea36-4f86-bf79-aa923004bad0",
+            "containerId": "ed0ef626-3eb9-4a0c-8e43-1cc974b0261e",
+            "name": "get_stock_calculate_groups",
+            "url": "https://stock.bakerychu.com/api/stock/get_stock_calculate_groups",
+            "method": "GET",
+            "sortNum": 75000,
+            "created": "2022-11-07T16:15:37.392Z",
+            "modified": "2022-11-10T04:31:42.842Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "a365376d-6011-44e0-8927-fb6a940ec6d7",
+            "colId": "9e5e6178-ea36-4f86-bf79-aa923004bad0",
+            "containerId": "73e36975-72d8-4db8-855c-a21a2a169021",
+            "name": "update_stock_information",
+            "url": "https://stock.bakerychu.com/api/stock/update_stock_information",
+            "method": "GET",
+            "sortNum": 80000,
+            "created": "2022-10-21T04:08:00.581Z",
+            "modified": "2022-10-21T04:08:00.581Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "46c393bd-f291-43cd-b709-1616eed1dab4",
+            "colId": "9e5e6178-ea36-4f86-bf79-aa923004bad0",
+            "containerId": "99830867-d8bd-446d-a208-0e8af86e2caa",
+            "name": "上市公司 Copy",
+            "url": "https://openapi.twse.com.tw/v1/opendata/t187ap03_L",
+            "method": "GET",
+            "sortNum": 90000,
+            "created": "2022-11-14T17:18:45.769Z",
+            "modified": "2022-11-14T17:18:59.851Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "b9965edb-3e40-4af7-b42f-cdfd6418094a",
+            "colId": "9e5e6178-ea36-4f86-bf79-aa923004bad0",
+            "containerId": "0cc249b5-11cd-482f-b85b-20e8d8c8db28",
+            "name": "cal_stock",
+            "url": "https://stock.bakerychu.com/api/stock/cal_stock",
+            "method": "POST",
+            "sortNum": 100000,
+            "created": "2022-10-21T04:08:16.310Z",
+            "modified": "2022-11-10T16:59:04.147Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "formencoded",
+                "raw": "",
+                "form": [
+                    {
+                        "name": "startdate",
+                        "value": "2018-01-01"
+                    },
+                    {
+                        "name": "enddate",
+                        "value": "2022-10-01"
+                    },
+                    {
+                        "name": "diff",
+                        "value": "0"
+                    },
+                    {
+                        "name": "stockA_id",
+                        "value": "1264"
+                    },
+                    {
+                        "name": "stockB_id",
+                        "value": "1259"
+                    },
+                    {
+                        "name": "upordown",
+                        "value": "2",
+                        "isDisabled": true
+                    }
+                ]
+            },
+            "tests": []
+        },
+        {
+            "_id": "15971dae-d256-4154-ae08-b3c99d775074",
+            "colId": "9e5e6178-ea36-4f86-bf79-aa923004bad0",
+            "containerId": "99830867-d8bd-446d-a208-0e8af86e2caa",
+            "name": "https://api.finmindtrade.com/api/v4/data?dataset=TaiwanStockPrice&data_id=2330&start_date=2022-10-07&end_date=2022-10-07&token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJkYXRlIjoiMjAyMi0wNS0wNSAxNzo0NzoxNiIsInVzZXJfaWQiOiJsb2dpdGVjaDA4NTciLCJpcCI6IjEwNi4xMDUuMTE2LjEwOCJ9.HmPjJB9uyUfDnekJeGcvvATmVIMf_jDhhcj4IZgJqlU",
+            "url": "https://api.finmindtrade.com/api/v4/data?dataset=TaiwanStockPrice&data_id=1101&start_date=2022-10-07&end_date=2022-10-07&token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJkYXRlIjoiMjAyMi0wNS0wNSAxNzo0NzoxNiIsInVzZXJfaWQiOiJsb2dpdGVjaDA4NTciLCJpcCI6IjEwNi4xMDUuMTE2LjEwOCJ9.HmPjJB9uyUfDnekJeGcvvATmVIMf_jDhhcj4IZgJqlU",
+            "method": "GET",
+            "sortNum": 110000,
+            "created": "2022-10-21T04:08:27.511Z",
+            "modified": "2022-10-21T04:08:27.511Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "dataset",
+                    "value": "TaiwanStockPrice",
+                    "isPath": false
+                },
+                {
+                    "name": "data_id",
+                    "value": "1101",
+                    "isPath": false
+                },
+                {
+                    "name": "start_date",
+                    "value": "2022-10-07",
+                    "isPath": false
+                },
+                {
+                    "name": "end_date",
+                    "value": "2022-10-07",
+                    "isPath": false
+                },
+                {
+                    "name": "token",
+                    "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJkYXRlIjoiMjAyMi0wNS0wNSAxNzo0NzoxNiIsInVzZXJfaWQiOiJsb2dpdGVjaDA4NTciLCJpcCI6IjEwNi4xMDUuMTE2LjEwOCJ9.HmPjJB9uyUfDnekJeGcvvATmVIMf_jDhhcj4IZgJqlU",
+                    "isPath": false
+                }
+            ],
+            "tests": []
+        },
+        {
+            "_id": "480ecd15-5491-4399-a380-9b6f358dc824",
+            "colId": "9e5e6178-ea36-4f86-bf79-aa923004bad0",
+            "containerId": "0cc249b5-11cd-482f-b85b-20e8d8c8db28",
+            "name": "cal_stock_withoutdiff",
+            "url": "https://stock.bakerychu.com/api/stock/cal_stock_withoutdiff",
+            "method": "POST",
+            "sortNum": 110000,
+            "created": "2022-11-16T09:29:13.288Z",
+            "modified": "2022-11-16T10:50:12.353Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "formencoded",
+                "raw": "",
+                "form": [
+                    {
+                        "name": "startdate",
+                        "value": "2018-01-01"
+                    },
+                    {
+                        "name": "enddate",
+                        "value": "2022-10-01"
+                    },
+                    {
+                        "name": "stockA_id",
+                        "value": "1258"
+                    },
+                    {
+                        "name": "stockB_id",
+                        "value": "1240"
+                    }
+                ]
+            },
+            "tests": []
+        },
+        {
+            "_id": "bcf1c567-a34e-4e93-979b-aa638148d20d",
+            "colId": "9e5e6178-ea36-4f86-bf79-aa923004bad0",
+            "containerId": "1e3007f9-58cb-4f86-98b2-8ed66c927dc6",
+            "name": "get_category_last_stock",
+            "url": "https://stock.bakerychu.com/api/stock/get_category_last_stock",
+            "method": "POST",
+            "sortNum": 115000,
+            "created": "2022-10-22T19:18:59.751Z",
+            "modified": "2022-10-31T07:30:30.696Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "formencoded",
+                "raw": "",
+                "form": [
+                    {
+                        "name": "stock_category_id",
+                        "value": "1"
+                    },
+                    {
+                        "name": "page",
+                        "value": ""
+                    },
+                    {
+                        "name": "stock_id",
+                        "value": "2330",
+                        "isDisabled": true
+                    }
+                ]
+            },
+            "tests": []
+        },
+        {
+            "_id": "3dace3f1-8cbe-4d30-848f-296aa9597551",
+            "colId": "9e5e6178-ea36-4f86-bf79-aa923004bad0",
+            "containerId": "0e2167e0-ee68-46af-8e98-e669b06f3620",
+            "name": "sendmail",
+            "url": "https://stock.bakerychu.com/api/stock/sendmail",
+            "method": "GET",
+            "sortNum": 120000,
+            "created": "2022-10-21T04:08:33.209Z",
+            "modified": "2022-10-21T04:08:33.209Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "8fa229f5-6354-400c-9fd1-5aecbb984748",
+            "colId": "9e5e6178-ea36-4f86-bf79-aa923004bad0",
+            "containerId": "ed0ef626-3eb9-4a0c-8e43-1cc974b0261e",
+            "name": "get_stock_probability",
+            "url": "https://stock.bakerychu.com/api/stock/get_stock_probability",
+            "method": "POST",
+            "sortNum": 150000,
+            "created": "2022-10-21T04:10:55.401Z",
+            "modified": "2022-11-16T13:51:44.758Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "formencoded",
+                "raw": "",
+                "form": [
+                    {
+                        "name": "stock_id",
+                        "value": "1336",
+                        "isDisabled": true
+                    },
+                    {
+                        "name": "show_zero_diff",
+                        "value": "0"
+                    },
+                    {
+                        "name": "stock_category_id",
+                        "value": "1"
+                    },
+                    {
+                        "name": "bulletin_id",
+                        "value": "4",
+                        "isDisabled": true
+                    },
+                    {
+                        "name": "stock_calculate_groups_id",
+                        "value": "1"
+                    }
+                ]
+            },
+            "tests": []
+        },
+        {
+            "_id": "45eae352-e383-4ddd-b2fd-a8f34df72c13",
+            "colId": "9e5e6178-ea36-4f86-bf79-aa923004bad0",
+            "containerId": "ed0ef626-3eb9-4a0c-8e43-1cc974b0261e",
+            "name": "get_all_stock_probability",
+            "url": "https://stock.bakerychu.com/api/stock/get_all_stock_probability",
+            "method": "POST",
+            "sortNum": 160000,
+            "created": "2022-10-21T13:16:55.069Z",
+            "modified": "2022-11-09T16:40:07.090Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "formencoded",
+                "raw": "",
+                "form": [
+                    {
+                        "name": "show_zero_diff",
+                        "value": "0",
+                        "isDisabled": true
+                    },
+                    {
+                        "name": "stock_calculate_groups_id",
+                        "value": "1"
+                    }
+                ]
+            },
+            "tests": []
+        },
+        {
+            "_id": "6496ea13-3516-4c7b-928a-75978b023c5b",
+            "colId": "9e5e6178-ea36-4f86-bf79-aa923004bad0",
+            "containerId": "ed0ef626-3eb9-4a0c-8e43-1cc974b0261e",
+            "name": "save_all_stock_probability",
+            "url": "https://stock.bakerychu.com/api/stock/save_all_stock_probability",
+            "method": "GET",
+            "sortNum": 170000,
+            "created": "2022-10-30T16:00:51.206Z",
+            "modified": "2022-10-30T16:00:56.354Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "f7b9b5d9-0c1f-4dec-a058-2ce4a7ebee5a",
+            "colId": "9e5e6178-ea36-4f86-bf79-aa923004bad0",
+            "containerId": "6cd45bcc-b93b-4e22-9d6b-eee924513b8b",
+            "name": "get_bulletin",
+            "url": "https://stock.bakerychu.com/api/stock/get_bulletin",
+            "method": "GET",
+            "sortNum": 180000,
+            "created": "2022-11-03T14:22:52.113Z",
+            "modified": "2022-11-03T14:22:52.113Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "c295c7cc-736d-4639-b0dc-ecd0e4a3d911",
+            "colId": "9e5e6178-ea36-4f86-bf79-aa923004bad0",
+            "containerId": "6cd45bcc-b93b-4e22-9d6b-eee924513b8b",
+            "name": "get_stock_special_kind_detail",
+            "url": "https://stock.bakerychu.com/api/stock/get_stock_special_kind_detail",
+            "method": "POST",
+            "sortNum": 200000,
+            "created": "2022-11-03T14:23:04.323Z",
+            "modified": "2022-11-10T11:16:02.588Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "formencoded",
+                "raw": "",
+                "form": [
+                    {
+                        "name": "bulletin_id",
+                        "value": "1"
+                    }
+                ]
+            },
+            "tests": []
+        }
+    ],
+    "settings": {
+        "headers": [],
+        "tests": []
+    }
+}
